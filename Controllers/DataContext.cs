@@ -12,6 +12,7 @@ namespace ProfileMatching.Controllers
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Slider> Sliders { get; set; }
+        public DbSet<City> Cities { get; set; }
 
     }
 }
