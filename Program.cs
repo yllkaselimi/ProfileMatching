@@ -1,7 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using ProfileMatching.Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
+var connString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(connString));
 
 var app = builder.Build();
 
