@@ -1,0 +1,38 @@
+﻿@model ProfileMatching.Models.Slider
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Slider</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SliderTitle" class="control-label"></label>
+                <input asp-for="SliderTitle" class="form-control" />
+                <span asp-validation-for="SliderTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderFilename" class="control-label"></label>
+                <input asp-for="SliderFilename" class="form-control" />
+                <span asp-validation-for="SliderFilename" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
