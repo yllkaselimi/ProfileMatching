@@ -14,6 +14,7 @@ namespace ProfileMatching.Controllers
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<EmploymentType> EmploymentTypes { get; set; }
+        public DbSet<JobPost> JobPosts { get; set; }
 
     }
 }

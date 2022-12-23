@@ -1,0 +1,59 @@
+﻿@model ProfileMatching.Models.JobPost
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>JobPost</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="JobPostId" />
+            <div class="form-group">
+                <label asp-for="JobPostName" class="control-label"></label>
+                <input asp-for="JobPostName" class="form-control" />
+                <span asp-validation-for="JobPostName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobPostBudget" class="control-label"></label>
+                <input asp-for="JobPostBudget" class="form-control" />
+                <span asp-validation-for="JobPostBudget" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobLength" class="control-label"></label>
+                <input asp-for="JobLength" class="form-control" />
+                <span asp-validation-for="JobLength" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobPostDescription" class="control-label"></label>
+                <input asp-for="JobPostDescription" class="form-control" />
+                <span asp-validation-for="JobPostDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobApplicationDeadline" class="control-label"></label>
+                <input asp-for="JobApplicationDeadline" class="form-control" />
+                <span asp-validation-for="JobApplicationDeadline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
