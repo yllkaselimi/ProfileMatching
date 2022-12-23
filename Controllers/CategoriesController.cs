@@ -55,12 +55,12 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CategoryId,CategoryName")] Category category)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             return View(category);
         }
 
@@ -92,13 +92,14 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(category);
                     await _context.SaveChangesAsync();
-                }
+                    return RedirectToAction(nameof(Index));
+            }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CategoryExists(category.CategoryId))
@@ -110,8 +111,8 @@ namespace ProfileMatching.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
+                //return RedirectToAction(nameof(Index));
+            //}
             return View(category);
         }
 
@@ -156,5 +157,6 @@ namespace ProfileMatching.Controllers
         {
           return _context.Categories.Any(e => e.CategoryId == id);
         }
+
     }
 }
