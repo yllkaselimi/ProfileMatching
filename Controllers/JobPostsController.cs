@@ -22,7 +22,7 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Index()
         {
             var dataContext = _context.JobPosts.Include(j => j.Category);
-            
+
             return View(await dataContext.ToListAsync());
             //return View(await dataContext.OrderByDescending(j => j.JobPostBudget).ToListAsync());
         }
