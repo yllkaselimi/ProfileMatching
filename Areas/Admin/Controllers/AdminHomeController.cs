@@ -6,7 +6,7 @@ namespace ProfileMatching.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("admin/[controller]")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AdminHomeController : Controller
     {
 
