@@ -16,5 +16,6 @@ public class ApplicationUser : IdentityUser
 
     public string LastName { get; set; }
 
+    public List<FreelancerDetails> FreelancerDetails { get; set; }
 
 }
