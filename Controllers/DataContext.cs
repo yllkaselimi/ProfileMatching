@@ -25,6 +25,10 @@ namespace ProfileMatching.Controllers
 
         public DbSet<FreelancerEducation> FreelancerEducations { get; set; }
 
+        public DbSet<ApplicantsPerJob> ApplicantsPerJobs { get; set; }
+
+        public DbSet<Contact> Contacts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
