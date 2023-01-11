@@ -18,16 +18,12 @@ namespace ProfileMatching.Controllers
         public DbSet<EmploymentType> EmploymentTypes { get; set; }
         public DbSet<JobPost> JobPosts { get; set; }
         public DbSet<Project> Projects { get; set; }
-
         public DbSet<FreelancerDetails> FreelancerDetails { get; set; }
-
         public DbSet<FreelancerExperience> FreelancerExperiences { get; set; }
-
         public DbSet<FreelancerEducation> FreelancerEducations { get; set; }
-
         public DbSet<ApplicantsPerJob> ApplicantsPerJobs { get; set; }
-
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<ClientDetail> ClientDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
