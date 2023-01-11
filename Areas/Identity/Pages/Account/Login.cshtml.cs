@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using ProfileMatching.Controllers;
+using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
 
 namespace ProfileMatching.Areas.Identity.Pages.Account
 {

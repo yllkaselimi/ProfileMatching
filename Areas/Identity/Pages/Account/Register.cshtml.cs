@@ -83,6 +83,8 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
             [Display(Name = "Lastname")]
             public string LastName { get; set; }
 
+            public string SelectedRole { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -136,7 +138,15 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, "Admin");
+                    if(Input.SelectedRole == "Freelancer")
+                    {
+                        await _userManager.AddToRoleAsync(user, "Freelancer");
+                    }
+
+                    if (Input.SelectedRole == "Client")
+                    {
+                        await _userManager.AddToRoleAsync(user, "Client");
+                    }
 
                     _logger.LogInformation("User created a new account with password.");
 
