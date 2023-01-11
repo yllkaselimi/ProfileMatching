@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProfileMatching.Controllers;
 
@@ -11,9 +12,10 @@ using ProfileMatching.Controllers;
 namespace ProfileMatching.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230111123828_Contact_and_ApplicantsPerJob")]
+    partial class Contact_and_ApplicantsPerJob
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,14 +234,16 @@ namespace ProfileMatching.Migrations
 
             modelBuilder.Entity("ProfileMatching.Models.ApplicantsPerJob", b =>
                 {
+                    b.Property<int>("JibPostId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("JobPostId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("JobPostId");
+                    b.HasIndex("JibPostId");
 
                     b.HasIndex("UserId");
 
@@ -599,7 +603,7 @@ namespace ProfileMatching.Migrations
                 {
                     b.HasOne("ProfileMatching.Models.JobPost", "JobPost")
                         .WithMany()
-                        .HasForeignKey("JobPostId")
+                        .HasForeignKey("JibPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
