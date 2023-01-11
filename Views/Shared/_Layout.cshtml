@@ -53,12 +53,17 @@
                     </ul>
                 </div>
 
+          
+
+
                <partial name="_LoginPartial" />
 
 
             </div>
         </nav>
     </header>
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -66,6 +71,24 @@
        
     </div>
 
+    @model List<JobPost>
+    <table>
+        <thead>
+            <tr>
+
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var jobPost in Model)
+            {
+                <tr>
+
+                    <td>@jobPost.CategoryId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
     <footer class="border-top footer text-muted">
         <div class="container">
