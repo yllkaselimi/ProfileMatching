@@ -29,6 +29,15 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
+            <div class="form-floating">
+                <p>Select Role:</p>
+                <input asp-for="Input.SelectedRole" type="radio" value="Freelancer"/> Freelancer <br/>
+                <span asp-validation-for="Input.SelectedRole" class="text-danger"></span>
+
+                <input asp-for="Input.SelectedRole" type="radio" value="Client"/> Client <br/>
+                <span asp-validation-for="Input.SelectedRole" class="text-danger"></span>
+
+            </div>
 
 
             <div class="form-floating">
