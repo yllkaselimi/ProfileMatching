@@ -25,8 +25,6 @@ namespace ProfileMatching.Controllers
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<ClientDetail> ClientDetails { get; set; }
 
-        public DbSet<Rating> Ratings { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
