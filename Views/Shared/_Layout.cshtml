@@ -71,24 +71,7 @@
        
     </div>
 
-    @model List<JobPost>
-    <table>
-        <thead>
-            <tr>
-
-                <th>Category</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var jobPost in Model)
-            {
-                <tr>
-
-                    <td>@jobPost.CategoryId</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    
 
     <footer class="border-top footer text-muted">
         <div class="container">

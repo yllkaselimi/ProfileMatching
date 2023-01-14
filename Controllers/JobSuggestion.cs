@@ -17,23 +17,25 @@ namespace ProfileMatching.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> ListMatchingJobPosts()
+        public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            var matchingJobPosts = await _context.JobPosts
-                .Join(_context.FreelancerDetails, jp => jp.CategoryId, fd => fd.CategoryId, (jp, fd) => new { JobPost = jp, FreelancerDetail = fd })
-                .Join(_context.Users, jpfd => jpfd.FreelancerDetail.UserId, u => u.Id, (jpfd, u) => new { jpfd.JobPost, User = u })
-                .Where(data => data.User.Id == user.Id)
-                .Select(data => data.JobPost)
-                .ToListAsync();
+
+            var detail = _context.FreelancerDetails.First(x => x.UserId == user.Id);
+
+            var cat = detail.CategoryId;
+
+            var matchingJobPosts = _context.JobPosts.Where(x => x.CategoryId == cat).Include(j => j.Category).ToList();
+            /*meqe e kena jobpost t'lidht me categoryId, qikjo .include po i shtohet qe me i include
+              dmth data edhe prej tabeles category, n'rast te na me mujt me thirr mandej n'front emrin e kategorise
+              me qat categoryId
+            */
+
             if (matchingJobPosts == null)
             {
                 return NotFound();
             }
+
             return View(matchingJobPosts);
         }
     }
