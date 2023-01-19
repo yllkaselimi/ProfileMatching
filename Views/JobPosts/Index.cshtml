@@ -66,7 +66,11 @@
                     <button>Apply</button>
                 </form>
             </td>
-
+                <td>
+                    <form asp-controller="SavedJobs" asp-action="SaveJob" method="post" asp-route-id="@item.JobPostId">
+                        <button>Save</button>
+                    </form>
+                </td>
         </tr>
 }
     </tbody>

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ProfileMatching.Models.SavedJob>
+
+@{
+    ViewData["Title"] = "FreeLancerSavedJobs";
+}
+
+<h1>SavedJobs</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.JobPostId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobPostId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    <form asp-controller="SavedJobs" asp-action="UnSave" method="post" asp-route-id="@item.SavedJobsId">
+                        <button>UnSave Job</button>
+                    </form>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
