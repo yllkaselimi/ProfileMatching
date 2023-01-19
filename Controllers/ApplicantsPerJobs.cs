@@ -86,5 +86,13 @@ namespace ProfileMatching.Controllers
 
 
 
+        public async Task<IActionResult> FreeLancerJobApplications()
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            return View(await _context.ApplicantsPerJobs.Where(m => m.UserId == userId).ToListAsync());
+        }
+
+
+
     }
 }
