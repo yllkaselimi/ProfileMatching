@@ -59,6 +59,7 @@
                 <a asp-action="Details" asp-route-id="@item.JobPostId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.JobPostId">Delete</a> |
                 <a asp-controller="ApplicantsPerJobs" asp-action="ShowJobApplicants" asp-route-id="@item.JobPostId">Show Applicants</a>
+                <a asp-controller="Freelancers" asp-action="Suggested" asp-route-id="@item.Category.CategoryId">Suggested Freelancers</a>
             </td>
 
             <td>
