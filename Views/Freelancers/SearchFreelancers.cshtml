@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<ProfileMatching.Models.FreelancerDetails>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "SearchFreelancers";
 }
 
-<h1>Freelancers</h1>
+<h1>Search Result for @ViewBag.SearchInput</h1>
 
 <form asp-action="SearchFreeLancers" method="get">
     <p>Search: </p>
@@ -23,7 +23,6 @@
     </select>
     <input type="submit" name="submit" value="Filter" />
 </form>
-
 
 <table class="table">
     <thead>
@@ -51,8 +50,8 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
+            <tr>
+                <td>
                 @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
             </td>
             <td>
