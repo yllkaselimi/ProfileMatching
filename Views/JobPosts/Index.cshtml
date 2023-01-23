@@ -13,8 +13,25 @@
                 alert("You already applied for this job!");  
             };  
         </script>  
-    } 
+    }
 
+<form asp-action="SearchJobPost" method="get">
+    <p>Search: </p>
+    <input type="text" name="teksti" value="" />
+    <input type="submit" name="submit" value="Search" />
+</form>
+
+
+<form asp-action="FilterJobPost" method="get">
+    <p>Select Category: </p>
+    <select name="id">
+        @foreach (var item in ViewBag.Categories)
+        {
+            <option value="@item.CategoryId">@item.CategoryName</option>
+        }
+    </select>
+    <input type="submit" name="submit" value="Filter" />
+</form>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -86,3 +103,5 @@
 }
     </tbody>
 </table>
+}
+

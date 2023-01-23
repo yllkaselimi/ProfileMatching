@@ -1,0 +1,100 @@
+﻿@model IEnumerable<ProfileMatching.Models.JobPost>
+
+@{
+    ViewData["Title"] = "SearchJobPost";
+}
+
+
+
+<h1>Search Result for @ViewBag.SearchInput</h1>
+
+<form asp-action="SearchJobPost" method="get">
+    <p>Search: </p>
+    <input type="text" name="teksti" value="" />
+    <input type="submit" name="submit" value="Search" />
+</form>
+
+@if (TempData["Message"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            alert("You already applied for this job!");
+        };
+    </script>
+}
+
+
+@if (Model.Count() == 0)
+{
+    <h3>No result was found.</h3>
+}
+else{
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.JobPostName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobPostBudget)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobLength)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobPostDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JobApplicationDeadline)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobPostName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobPostBudget)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobLength)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobPostDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobApplicationDeadline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.JobPostId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.JobPostId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.JobPostId">Delete</a> |
+                    <a asp-controller="ApplicantsPerJobs" asp-action="ShowJobApplicants" asp-route-id="@item.JobPostId">Show Applicants</a>
+                    <a asp-controller="Freelancers" asp-action="Suggested" asp-route-id="@item.Category.CategoryId">Suggested Freelancers</a>
+                </td>
+
+                <td>
+                    <form asp-controller="ApplicantsPerJobs" asp-action="ApplyForJob" method="post" asp-route-id="@item.JobPostId">
+                        <button>Apply</button>
+                    </form>
+                </td>
+                <td>
+                    <form asp-controller="SavedJobs" asp-action="SaveJob" method="post" asp-route-id="@item.JobPostId">
+                        <button>Save</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
