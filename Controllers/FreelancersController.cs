@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ProfileMatching.Models;
 
 
 

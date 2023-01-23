@@ -24,6 +24,7 @@ namespace ProfileMatching.Controllers
         // GET: JobPosts
         public async Task<IActionResult> Index()
         {
+            ViewData["Categories"] = _context.Categories.ToList();
             var dataContext = _context.JobPosts.Include(j => j.Category);
 
             return View(await dataContext.ToListAsync());
@@ -168,5 +169,39 @@ namespace ProfileMatching.Controllers
         {
           return _context.JobPosts.Any(e => e.JobPostId == id);
         }
+
+
+        public async Task<IActionResult> SearchJobPost(string teksti)
+        {
+            ViewData["Categories"] = _context.Categories.ToList();
+
+            ViewData["SearchInput"] = teksti;
+
+            var allJobs = _context.JobPosts.Include(j => j.Category);
+            var result = allJobs.Where(f => f.Category.CategoryName.ToLower().Contains(teksti.ToLower())
+                || f.JobPostName.ToLower().Contains(teksti.ToLower()));
+             
+            return View(await result.ToListAsync());
+        }
+
+        public async Task<IActionResult> FilterJobPost(int? id)
+        {
+            ViewData["Categories"] = _context.Categories.ToList();
+
+            var category = _context.Categories.Where(x => x.CategoryId == id).First();
+            ViewData["FilteredCategoryName"] = category.CategoryName;
+
+            var jobpostvar = _context.JobPosts
+                .Include(f => f.Category)
+                .Where(f => f.Category.CategoryId == id);
+
+            if (jobpostvar == null)
+            {
+                return NotFound();
+            }
+            return View(await jobpostvar.ToListAsync());
+        }
+
     }
+
 }
