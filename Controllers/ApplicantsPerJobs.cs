@@ -38,8 +38,10 @@ namespace ProfileMatching.Controllers
 
             if((_context.ApplicantsPerJobs.Any(p => p.JobPostId == id && p.UserId == userId)))
             {
-                return Problem("You already applied for this job");
+                TempData["Message"] = "You already applied for this job";
+                return Redirect(HttpContext.Request.Headers["Referer"]);
             }
+
 
             _context.ApplicantsPerJobs.Add(itemToAdd);
             await _context.SaveChangesAsync();
@@ -54,6 +56,9 @@ namespace ProfileMatching.Controllers
             {
                 return NotFound();
             }
+
+            var job =_context.JobPosts.Where(x => x.JobPostId == id).First();
+            ViewData["JobName"] = job.JobPostName;
 
             var applicants = await _context.ApplicantsPerJobs.Where(m => m.JobPostId == id).ToListAsync();
             if (applicants == null)

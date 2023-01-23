@@ -6,6 +6,16 @@
 
 <h1>Index</h1>
 
+    @if (TempData["Message"] != null)  
+    {  
+        <script type="text/javascript">  
+            window.onload = function () {  
+                alert("You already applied for this job!");  
+            };  
+        </script>  
+    } 
+
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>

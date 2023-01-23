@@ -4,9 +4,16 @@
     ViewData["Title"] = "ShowJobApplicants";
 }
 
-<h1>Index</h1>
+<h1>Applicants for Job "@ViewBag.JobName"</h1>
 
-<table class="table">
+
+@if(Model.Count() == 0)
+{
+    <h3>Nothing to show here.</h3>
+}
+else
+{
+   <table class="table">
     <thead>
         <tr>
             <th>
@@ -38,3 +45,5 @@
 }
     </tbody>
 </table>
+
+}

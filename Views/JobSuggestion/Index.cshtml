@@ -9,6 +9,15 @@
     ViewData["Title"] = "Index";
 }
 
+    @if (TempData["Message"] != null)  
+    {  
+        <script type="text/javascript">  
+            window.onload = function () {  
+                alert("You already applied for this job!");  
+            };  
+        </script>  
+    } 
+
 <table class="table">
     <thead>
         <tr>

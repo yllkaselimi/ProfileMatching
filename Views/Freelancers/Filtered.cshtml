@@ -24,7 +24,14 @@
     <input type="submit" name="submit" value="Filter" />
 </form>
 
-<table class="table">
+
+@if(Model.Count() == 0)
+{
+    <h3>No result was found.</h3>
+}
+else
+{
+    <table class="table">
     <thead>
         <tr>
             <th>
@@ -49,7 +56,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model) {
             <tr>
                 <td>
                 @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
@@ -74,3 +81,5 @@
 }
     </tbody>
 </table>
+
+}
