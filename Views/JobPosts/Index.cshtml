@@ -6,6 +6,16 @@
 
 <h1>Index</h1>
 
+    @if (TempData["Message"] != null)  
+    {  
+        <script type="text/javascript">  
+            window.onload = function () {  
+                alert("You already applied for this job!");  
+            };  
+        </script>  
+    } 
+
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -59,6 +69,7 @@
                 <a asp-action="Details" asp-route-id="@item.JobPostId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.JobPostId">Delete</a> |
                 <a asp-controller="ApplicantsPerJobs" asp-action="ShowJobApplicants" asp-route-id="@item.JobPostId">Show Applicants</a>
+                <a asp-controller="Freelancers" asp-action="Suggested" asp-route-id="@item.Category.CategoryId">Suggested Freelancers</a>
             </td>
 
             <td>
