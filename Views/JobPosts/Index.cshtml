@@ -14,6 +14,23 @@
             };  
         </script>  
     }
+@if (TempData["Message2"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            alert("You already saved this job!");
+        };
+    </script>
+}
+
+@if (TempData["Successful"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            alert("Application was successful!");
+        };
+    </script>
+}
 
 <form asp-action="SearchJobPost" method="get">
     <p>Search: </p>

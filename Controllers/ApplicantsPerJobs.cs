@@ -36,16 +36,17 @@ namespace ProfileMatching.Controllers
                 JobPostId = id
             };
 
+
             if((_context.ApplicantsPerJobs.Any(p => p.JobPostId == id && p.UserId == userId)))
             {
                 TempData["Message"] = "You already applied for this job";
                 return Redirect(HttpContext.Request.Headers["Referer"]);
             }
 
-
+            TempData["Successful"] = "Successful Application!";
             _context.ApplicantsPerJobs.Add(itemToAdd);
             await _context.SaveChangesAsync();
-            return View(itemToAdd); 
+            return Redirect(HttpContext.Request.Headers["Referer"]); 
         }
 
 

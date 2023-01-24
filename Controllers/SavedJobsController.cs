@@ -38,7 +38,8 @@ namespace ProfileMatching.Controllers
 
             if ((_context.SavedJobs.Any(p => p.JobPostId == id && p.UserId == userId)))
             {
-                return Problem("You already saved this job");
+                TempData["Message2"] = "You already saved this job";
+                return Redirect(HttpContext.Request.Headers["Referer"]);
             }
 
             _context.SavedJobs.Add(itemToAdd);
