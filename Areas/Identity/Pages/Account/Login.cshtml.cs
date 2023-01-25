@@ -23,11 +23,15 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly DataContext _context;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, DataContext context, UserManager<IdentityUser> userManager)
         {
+            _context = context;
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -116,6 +120,13 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    //uncomment this kur don ni user me bo admin, veq qite te userId Id e userit
+                    /*
+                    var userId = "4f6e15ca-7064-4e64-a70f-4d9dbda8443f";
+                    var user = _context.Users.Where(x => x.Id == userId).First();
+                    await _userManager.RemoveFromRoleAsync(user, "User");
+                    await _userManager.AddToRoleAsync(user, "Admin");*/
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

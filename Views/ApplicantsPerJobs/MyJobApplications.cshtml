@@ -1,10 +1,10 @@
-﻿@model IEnumerable<ProfileMatching.Models.SavedJob>
+﻿@model IEnumerable<ProfileMatching.Models.ApplicantsPerJob>
 
 @{
-    ViewData["Title"] = "FreeLancerSavedJobs";
+    ViewData["Title"] = "MyJobApplications";
 }
 
-<h1>SavedJobs</h1>
+<h1>Your Job Applications:</h1>
 
 <table class="table">
     <thead>
@@ -28,13 +28,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.UserId)
                 </td>
-                <td>
-                    <form asp-controller="SavedJobs" asp-action="UnSave" method="post" asp-route-id="@item.SavedJobsId">
-                        <button>UnSave Job</button>
-                    </form>
-                </td>
 
+             
             </tr>
+
         }
     </tbody>
 </table>

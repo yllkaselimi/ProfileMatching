@@ -4,33 +4,25 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>All Job Posts @ViewBag.Role</h1>
 
-    @if (TempData["Message"] != null)  
-    {  
-        <script type="text/javascript">  
-            window.onload = function () {  
-                alert("You already applied for this job!");  
-            };  
-        </script>  
+    @if (TempData["SuccessfulApplication"] != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("Application was successful!");
+            };
+        </script>
     }
-@if (TempData["Message2"] != null)
-{
-    <script type="text/javascript">
-        window.onload = function () {
-            alert("You already saved this job!");
-        };
-    </script>
-}
 
-@if (TempData["Successful"] != null)
-{
-    <script type="text/javascript">
-        window.onload = function () {
-            alert("Application was successful!");
-        };
-    </script>
-}
+    @if (TempData["SuccessfulSave"] != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("Job saved successfully!");
+            };
+        </script>
+    }
 
 <form asp-action="SearchJobPost" method="get">
     <p>Search: </p>
@@ -50,9 +42,14 @@
     <input type="submit" name="submit" value="Filter" />
 </form>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if(ViewBag.Role == "Client")
+{
+    <p>
+         <a asp-action="Create">Create New</a>
+    </p>
+}
+
+
 <table class="table">
     <thead>
         <tr>
@@ -98,27 +95,58 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Category.CategoryName)
             </td>
-            <td>
+
+                @if (ViewBag.Role == "Client" || ViewBag.Role == "Admin" )
+                {
+                    <td>
                 <a asp-action="Edit" asp-route-id="@item.JobPostId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.JobPostId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.JobPostId">Delete</a> |
                 <a asp-controller="ApplicantsPerJobs" asp-action="ShowJobApplicants" asp-route-id="@item.JobPostId">Show Applicants</a>
                 <a asp-controller="Freelancers" asp-action="Suggested" asp-route-id="@item.Category.CategoryId">Suggested Freelancers</a>
             </td>
+            }
 
-            <td>
-                <form asp-controller="ApplicantsPerJobs" asp-action="ApplyForJob" method="post" asp-route-id="@item.JobPostId">
-                    <button>Apply</button>
-                </form>
-            </td>
-                <td>
-                    <form asp-controller="SavedJobs" asp-action="SaveJob" method="post" asp-route-id="@item.JobPostId">
+            @if(ViewBag.Role == "Freelancer"){
+                    @if (((List<int?>)ViewBag.AppliedJobs).Contains(item.JobPostId)) {
+                        <td>
+                         <form asp-controller="ApplicantsPerJobs" asp-action="UnApply" method="post" asp-route-id="@item.JobPostId">
+                             <button>UnApply</button>
+                         </form>
+                        </td>
+                    }
+                    else
+                    {
+                         <td>
+                         <form asp-controller="ApplicantsPerJobs" asp-action="ApplyForJob" method="post" asp-route-id="@item.JobPostId">
+                             <button>Apply</button>
+                         </form>
+                        </td>  
+                    }
+
+
+                    @if (((List<int?>)ViewBag.SavedJobs).Contains(item.JobPostId))
+                    {
+                         <td>
+                        <form asp-controller="SavedJobs" asp-action="Unsave" method="post" asp-route-id="@item.JobPostId">
+                            <button>Unsave</button>
+                        </form>
+                        </td>
+                    }
+                    else
+                    {
+                         <td>
+                        <form asp-controller="SavedJobs" asp-action="SaveJob" method="post" asp-route-id="@item.JobPostId">
                         <button>Save</button>
-                    </form>
-                </td>
+                        </form>
+                        </td>
+                    }
+
+
+            }
+
         </tr>
 }
     </tbody>
 </table>
-}
+
 

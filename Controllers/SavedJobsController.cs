@@ -42,14 +42,30 @@ namespace ProfileMatching.Controllers
                 return Redirect(HttpContext.Request.Headers["Referer"]);
             }
 
+            TempData["SuccessfulSave"] = "Successful Save!";
             _context.SavedJobs.Add(itemToAdd);
             await _context.SaveChangesAsync();
-            return View(itemToAdd);
+            return Redirect(HttpContext.Request.Headers["Referer"]);
+        }
+
+        //kjo e merr id te logged in user edhe jobpostId, aplikohet veq kur freelancer e bon vet unsave 
+        public async Task<IActionResult> Unsave(int? id)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var job = _context.SavedJobs.Where(x => x.JobPostId == id && x.UserId == userId).First();
+
+            if (job != null)
+            {
+                _context.SavedJobs.Remove(job);
+            }
+
+            await _context.SaveChangesAsync();
+            return Redirect(HttpContext.Request.Headers["Referer"]);
         }
 
 
-
-        public async Task<IActionResult> UnSave(int? id)
+        //kto e perdor veq admini, e merr id te savedjob
+        public async Task<IActionResult> DeleteSave(int? id)
         {
             if (_context.SavedJobs == null)
             {
@@ -68,7 +84,7 @@ namespace ProfileMatching.Controllers
 
 
 
-        public async Task<IActionResult> FreeLancerSavedJobs()
+        public async Task<IActionResult> MySavedJobs()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             return View(await _context.SavedJobs.Where(m => m.UserId == userId).ToListAsync());

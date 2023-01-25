@@ -43,10 +43,24 @@ namespace ProfileMatching.Controllers
                 return Redirect(HttpContext.Request.Headers["Referer"]);
             }
 
-            TempData["Successful"] = "Successful Application!";
+            TempData["SuccessfulApplication"] = "Successful Application!";
             _context.ApplicantsPerJobs.Add(itemToAdd);
             await _context.SaveChangesAsync();
             return Redirect(HttpContext.Request.Headers["Referer"]); 
+        }
+
+        public async Task<IActionResult> UnApply(int? id)
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var job = _context.ApplicantsPerJobs.Where(x => x.JobPostId == id && x.UserId == userId).First();
+
+            if (job != null)
+            {
+               _context.ApplicantsPerJobs.Remove(job);
+            }
+
+            await _context.SaveChangesAsync();
+            return Redirect(HttpContext.Request.Headers["Referer"]);
         }
 
 
@@ -91,8 +105,7 @@ namespace ProfileMatching.Controllers
         }
 
 
-
-        public async Task<IActionResult> FreeLancerJobApplications()
+        public async Task<IActionResult> MyJobApplications()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             return View(await _context.ApplicantsPerJobs.Where(m => m.UserId == userId).ToListAsync());

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProfileMatching.Models
@@ -7,6 +8,11 @@ namespace ProfileMatching.Models
     {
         [Key]
         public int ClientDetailsId { get; set; }
+
+        public string? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public ApplicationUser ApplicationUser { get; set; }
+
         public string Position { get; set; }
         public string CompanyName { get; set; }
         public string Description { get; set; }
@@ -14,6 +20,7 @@ namespace ProfileMatching.Models
         public int? CityId { get; set; }
         [ForeignKey("CityId")]
         public City City { get; set; }
+
 
     }
 }
