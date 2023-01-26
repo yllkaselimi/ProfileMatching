@@ -14,6 +14,7 @@
             };  
         </script>  
     }
+<<<<<<< Updated upstream
 @if (TempData["Message2"] != null)
 {
     <script type="text/javascript">
@@ -31,6 +32,17 @@
         };
     </script>
 }
+=======
+<a href="c:\users\artane\documents\github\profilematching\views\jobposts\index.cshtml">c:\users\artane\documents\github\profilematching\views\jobposts\index.cshtml</a>
+    @if (TempData["SuccessfulSave"] != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("Job saved successfully!");
+            };
+        </script>
+    }
+>>>>>>> Stashed changes
 
 <form asp-action="SearchJobPost" method="get">
     <p>Search: </p>
