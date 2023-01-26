@@ -18,4 +18,5 @@ public class ApplicationUser : IdentityUser
 
     public List<FreelancerDetails> FreelancerDetails { get; set; }
 
+    public List<ClientDetail> ClientDetails { get; set; }
 }

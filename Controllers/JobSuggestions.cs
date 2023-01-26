@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ProfileMatching.Controllers
 {
-    public class JobSuggestion : Controller
+    public class JobSuggestions : Controller
     {
         private readonly DataContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public JobSuggestion(DataContext context, UserManager<IdentityUser> userManager)
+        public JobSuggestions(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -20,8 +20,14 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
+ 
+            var detail = _context.FreelancerDetails.FirstOrDefault(x => x.UserId == user.Id);
 
-            var detail = _context.FreelancerDetails.First(x => x.UserId == user.Id);
+            //niher check qaj user a i ka qit freelancer detials nprofil (se na vyn kategoria), nqs jo, e qon te faqja me create freelancer details
+            if (detail == null)
+            {
+                return RedirectToAction("Create", "FreelancerDetails");
+            }
 
             var cat = detail.CategoryId;
 
@@ -30,6 +36,16 @@ namespace ProfileMatching.Controllers
               dmth data edhe prej tabeles category, n'rast te na me mujt me thirr mandej n'front emrin e kategorise
               me qat categoryId
             */
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+
+            //i bartim id te puneve qe useri has already applied for me ni viewdata
+            var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
+            ViewData["AppliedJobs"] = appliedJobs;
+
+            //i bartim id te puneve qe useri has already saves for me ni viewdata
+            var savedJobs = _context.SavedJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
+            ViewData["SavedJobs"] = savedJobs;
 
             if (matchingJobPosts == null)
             {

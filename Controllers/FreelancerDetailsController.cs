@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace ProfileMatching.Controllers
     public class FreelancerDetailsController : Controller
     {
         private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public FreelancerDetailsController(DataContext context)
+        public FreelancerDetailsController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: FreelancerDetails
@@ -48,8 +51,14 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerDetails/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "FirstName");
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityName");
@@ -72,12 +81,18 @@ namespace ProfileMatching.Controllers
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerDetails.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", freelancerDetails.CategoryId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", freelancerDetails.CityId);
-            return View(freelancerDetails);
+            return Redirect(HttpContext.Request.Headers["Referer"]);
         }
 
         // GET: FreelancerDetails/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             if (id == null || _context.FreelancerDetails == null)
             {
                 return NotFound();

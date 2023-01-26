@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +14,18 @@ namespace ProfileMatching.Controllers
     public class ClientDetailsController : Controller
     {
         private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ClientDetailsController(DataContext context)
+        public ClientDetailsController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ClientDetails
         public async Task<IActionResult> Index()
         {
-            var dataContext = _context.ClientDetails.Include(c => c.City);
+            var dataContext = _context.ClientDetails.Include(c => c.ApplicationUser).Include(c => c.City);
             return View(await dataContext.ToListAsync());
         }
 
@@ -34,6 +38,7 @@ namespace ProfileMatching.Controllers
             }
 
             var clientDetail = await _context.ClientDetails
+                .Include(c => c.ApplicationUser)
                 .Include(c => c.City)
                 .FirstOrDefaultAsync(m => m.ClientDetailsId == id);
             if (clientDetail == null)
@@ -45,8 +50,15 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: ClientDetails/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId");
             return View();
         }
@@ -56,14 +68,15 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClientDetailsId,Position,CompanyName,Description,CityId")] ClientDetail clientDetail)
+        public async Task<IActionResult> Create([Bind("ClientDetailsId,UserId,Position,CompanyName,Description,CityId")] ClientDetail clientDetail)
         {
-          //  if (ModelState.IsValid)
-           // {
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(clientDetail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-           // }
+            //}
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", clientDetail.UserId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", clientDetail.CityId);
             return View(clientDetail);
         }
@@ -71,6 +84,12 @@ namespace ProfileMatching.Controllers
         // GET: ClientDetails/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             if (id == null || _context.ClientDetails == null)
             {
                 return NotFound();
@@ -81,6 +100,7 @@ namespace ProfileMatching.Controllers
             {
                 return NotFound();
             }
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", clientDetail.UserId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", clientDetail.CityId);
             return View(clientDetail);
         }
@@ -90,15 +110,15 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ClientDetailsId,Position,CompanyName,Description,CityId")] ClientDetail clientDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("ClientDetailsId,UserId,Position,CompanyName,Description,CityId")] ClientDetail clientDetail)
         {
             if (id != clientDetail.ClientDetailsId)
             {
                 return NotFound();
             }
 
-           // if (ModelState.IsValid)
-          //  {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(clientDetail);
@@ -114,9 +134,10 @@ namespace ProfileMatching.Controllers
                     {
                         throw;
                     }
-           //     }
-             //   return RedirectToAction(nameof(Index));
-            }
+                }
+                return RedirectToAction(nameof(Index));
+           // }
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", clientDetail.UserId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", clientDetail.CityId);
             return View(clientDetail);
         }
@@ -130,6 +151,7 @@ namespace ProfileMatching.Controllers
             }
 
             var clientDetail = await _context.ClientDetails
+                .Include(c => c.ApplicationUser)
                 .Include(c => c.City)
                 .FirstOrDefaultAsync(m => m.ClientDetailsId == id);
             if (clientDetail == null)
