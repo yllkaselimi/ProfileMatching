@@ -1,4 +1,6 @@
 ﻿@model ProfileMatching.Models.Project
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Create";
@@ -37,10 +39,20 @@
                 <label asp-for="CategoryId" class="control-label"></label>
                 <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
             </div>
-            <div class="form-group">
+            @if(ViewBag.Role == "Admin")
+            {
+                <div class="form-group">
+                    <label asp-for="UserId" class="control-label"></label>
+                    <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+                </div>
+            }
+            else
+            {
+             <div hidden class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
+                <input name="UserId" asp-for="UserId" value=@UserManager.GetUserId(User)></input>
+            </div> 
+            }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

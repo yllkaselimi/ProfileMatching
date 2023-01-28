@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,15 +14,23 @@ namespace ProfileMatching.Controllers
     public class ProjectsController : Controller
     {
         private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ProjectsController(DataContext context)
+        public ProjectsController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Projects
         public async Task<IActionResult> Index()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             var dataContext = _context.Projects.Include(p => p.ApplicationUser).Include(p => p.Category);
             return View(await dataContext.ToListAsync());
         }
@@ -47,8 +56,14 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Projects/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId");
             return View();
@@ -77,6 +92,12 @@ namespace ProfileMatching.Controllers
         // GET: Projects/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             if (id == null || _context.Projects == null)
             {
                 return NotFound();
