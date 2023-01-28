@@ -26,7 +26,7 @@ namespace ProfileMatching.Controllers
            .Include(f => f.Category)
            .FirstOrDefault(f => f.UserId == userId);
 
-            var projekti = _context.Projects.Where(f => f.UserId == userId).ToList();
+            var projekti = _context.Projects.Include(f => f.Category).Where(f => f.UserId == userId).ToList();
             ViewData["Projects"] = projekti;
 
             var freelancerexperience = _context.FreelancerExperiences.Where(f => f.UserId == userId).ToList();
