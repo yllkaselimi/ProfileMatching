@@ -64,9 +64,9 @@ namespace ProfileMatching.Controllers
         {
             //if (ModelState.IsValid)
             //{
-                _context.Add(jobPost);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            _context.Add(jobPost);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
             //}
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", jobPost.CategoryId);
             return View(jobPost);
@@ -103,22 +103,22 @@ namespace ProfileMatching.Controllers
 
             //if (ModelState.IsValid)
             //{
-                try
-                {
-                    _context.Update(jobPost);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+            try
+            {
+                _context.Update(jobPost);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-                catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!JobPostExists(jobPost.JobPostId))
                 {
-                    if (!JobPostExists(jobPost.JobPostId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
                 //}
                 //return RedirectToAction(nameof(Index));
             }
@@ -159,13 +159,13 @@ namespace ProfileMatching.Controllers
             {
                 _context.JobPosts.Remove(jobPost);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
         private bool JobPostExists(int id)
         {
-          return _context.JobPosts.Any(e => e.JobPostId == id);
+            return _context.JobPosts.Any(e => e.JobPostId == id);
         }
 
 
@@ -193,7 +193,7 @@ namespace ProfileMatching.Controllers
             var allJobs = _context.JobPosts.Include(j => j.Category);
             var result = allJobs.Where(f => f.Category.CategoryName.ToLower().Contains(teksti.ToLower())
                 || f.JobPostName.ToLower().Contains(teksti.ToLower()));
-             
+
             return View(await result.ToListAsync());
         }
 
