@@ -48,66 +48,198 @@
                 @Model.Category.CategoryName
             </td>
             <td>
-                @Model.City.CityName)
+                @Model.City.CityName
             </td>
             <td>
-                @Model.HourlyRate)
+                @Model.HourlyRate
             </td>
-
         </tr>
 </table>
-
+<h2>Projects</h2>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor( ViewBag.Projects.ProjectName)
+                <label>Name</label>
+                @ViewBag.ProjectName
             </th>
             <th>
-                @Html.DisplayNameFor(ViewBag.Projects.FileName)
+              <label>FileName</label>
+               @ViewBag.FileName
             </th>
             <th>
-                @Html.DisplayNameFor(ViewBag.Projects.Description)
+                <label>Description</label>
+                @ViewBag.Description
             </th>
             <th>
-                @Html.DisplayNameFor(ViewBag.Projects.ProjectWebsite)
+                <label>ProjectWebsite</label>
+                @ViewBag.ProjectsWebsite
             </th>
             <th>
-                @Html.DisplayNameFor(ViewBag.Projects.Category)
+                <label>Category</label>
+                @ViewBag.Category
             </th>
             <th>
-                @Html.DisplayNameFor(ViewBag.Projects.ApplicationUser)
+                <label>User</label>
+                @ViewBag.ApplicationUser
             </th>
-            <th></th>
+
         </tr>
     </thead>
+
 
     <tbody>
         @foreach (var item in ViewBag.Projects)
         {
             <tr>
                 <td>
-                    @item.Projects.ProjectName
+                    @item.ProjectName
                 </td>
                 <td>
-                    @item.Projects.FileName
+                    @item.FileName
                 </td>
                 <td>
-                    @item.Projects.Description
+                    @item.Description
                 </td>
                 <td>
-                    @item.Projects.ProjectWebsite
+                    @item.ProjectWebsite
                 </td>
                 <td>
-                    @item.Projects.CategoryId
+                    @item.Category
                 </td>
                 <td>
-                    @item.Project.ApplicationUser.Id
+                    @item.ApplicationUser
                 </td>
-
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
+                </td>
             </tr>
         }
+    </tbody>
+</table>
+
+<h2>Freelancer Experience</h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <label>User</label>
+                        @ViewBag.ApplicationUser
+                    </th>
+                    <th>
+                        <label>EmploymentType</label>
+                        @ViewBag.EmploymentType
+                    </th>
+                    <th>
+                        <label>CompanyName</label>
+                        @ViewBag.CompanyName
+                    </th>
+                    <th>
+                        <label>StartDate</label>
+                        @ViewBag.StartDate
+                    </th>
+                    <th>
+                        <label>EndDate</label>
+                        @ViewBag.EndDate
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.FreeLancerExperiences)
+                {
+                    <tr>
+                        <td>
+                            @item.ApplicationUser
+                        </td>
+                        <td>
+                            @item.EmploymentType
+                        </td>
+                        <td>
+                            @item.CompanyName
+                        </td>
+                        <td>
+                            @item.StartDate
+                        </td>
+                        <td>
+                            @item.EndDate
+
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id=Viewbag.FreeLancerExperienceID>Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.FreelancerExperienceID">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.FreelancerExperienceID">Delete</a>
+                        </td>
+                    </tr>
+                }
+</table>
+
+<h2>Freelancer Educations</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <label>InstituteName</label>
+                            @ViewBag.InstituteName
+                        </th>
+                        <th>
+                            <label>Degree</label>
+                            @ViewBag.Degree
+                        </th>
+                        <th>
+                            <label>FiedOfStudy</label>
+                            @ViewBag.FieldOfStudy
+                        </th>
+                        <th>
+                            <label>StartDate</label>
+                            @ViewBag.StartDate
+                        </th>
+                        <th>
+                            <label>EndDate</label>
+                            @ViewBag.EndDate
+                        </th>
+                        
+                        <th>
+                            <label>User</label>
+                            @ViewBag.ApplicationUser
+                        </th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.FreeLancerEducations)
+                    {
+                        <tr>
+                         <td>
+                            @item.InstituteName
+                         </td>
+                            <td>
+                                @item.Degree
+                            </td>
+                            <td>
+                                @item.FieldOfStudy
+                            </td>
+                            <td>
+                                @item.StartDate
+                            </td>
+                       <td>
+                            @item.EndDate
+                         </td>
+                            <td>
+                                @item.ApplicationUser
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.FreelancerEducationid">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.FreelancerEducationid">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.FreelancerEducationid">Delete</a>
+                            </td>
+                        </tr>
+                    }
+
+ 
 
     </tbody>
 </table>  

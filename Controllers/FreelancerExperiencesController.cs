@@ -61,12 +61,12 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FreelancerExperienceID,UserId,EmploymentTypeId,CompanyName,StartDate,EndDate")] FreelancerExperience freelancerExperience)
         {
-            if (ModelState.IsValid)
-            {
+          //  if (ModelState.IsValid)
+           // {
                 _context.Add(freelancerExperience);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+          //  }
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerExperience.UserId);
             ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeId", freelancerExperience.EmploymentTypeId);
             return View(freelancerExperience);
@@ -102,8 +102,8 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+          //  if (ModelState.IsValid)
+         //   {
                 try
                 {
                     _context.Update(freelancerExperience);
@@ -119,8 +119,8 @@ namespace ProfileMatching.Controllers
                     {
                         throw;
                     }
-                }
-                return RedirectToAction(nameof(Index));
+          //      }
+           //     return RedirectToAction(nameof(Index));
             }
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerExperience.UserId);
             ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeId", freelancerExperience.EmploymentTypeId);
