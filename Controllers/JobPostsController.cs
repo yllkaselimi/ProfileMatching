@@ -60,7 +60,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId")] JobPost jobPost)
+        public async Task<IActionResult> Create([Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId,UserId")] JobPost jobPost)
         {
             //if (ModelState.IsValid)
             //{
@@ -94,7 +94,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId")] JobPost jobPost)
+        public async Task<IActionResult> Edit(int id, [Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId, UserId")] JobPost jobPost)
         {
             if (id != jobPost.JobPostId)
             {

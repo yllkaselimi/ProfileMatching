@@ -106,15 +106,15 @@
                     @item.ProjectWebsite
                 </td>
                 <td>
-                    @item.Category
+                    @item.Category.CategoryName
                 </td>
                 <td>
                     @item.ApplicationUser
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
+                    <a asp-action="Edit" asp-controller="Projects" asp-route-id="@item.ProjectId">Edit</a> |
+                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@item.ProjectId">Details</a> |
+                    <a asp-action="Delete" asp-controller="Projects" asp-route-id="@item.ProjectId">Delete</a>
                 </td>
             </tr>
         }
@@ -129,10 +129,6 @@
                     <th>
                         <label>User</label>
                         @ViewBag.ApplicationUser
-                    </th>
-                    <th>
-                        <label>EmploymentType</label>
-                        @ViewBag.EmploymentType
                     </th>
                     <th>
                         <label>CompanyName</label>
@@ -156,9 +152,6 @@
                             @item.ApplicationUser
                         </td>
                         <td>
-                            @item.EmploymentType
-                        </td>
-                        <td>
                             @item.CompanyName
                         </td>
                         <td>
@@ -169,9 +162,9 @@
 
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id=Viewbag.FreeLancerExperienceID>Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.FreelancerExperienceID">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.FreelancerExperienceID">Delete</a>
+                    <a asp-action="Edit" asp-controller="FreelancersExperiences" asp-route-id=Viewbag.FreeLancerExperienceID>Edit</a> |
+                    <a asp-action="Details" asp-controller="FreelancerExperiences" asp-route-id="@item.FreelancerExperienceID">Details</a> |
+                            <a asp-action="Delete" asp-controller="FreelancerExperiences" asp-route-id="@item.FreelancerExperienceID">Delete</a>
                         </td>
                     </tr>
                 }
@@ -232,9 +225,9 @@
                                 @item.ApplicationUser
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.FreelancerEducationid">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.FreelancerEducationid">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.FreelancerEducationid">Delete</a>
+                                <a asp-action="Edit" asp-controller="FreeLancerEducations" asp-route-id="@item.FreelancerEducationid">Edit</a> |
+                    <a asp-action="Details" asp-controller="FreeLancerEducations" asp-route-id="@item.FreelancerEducationid">Details</a> |
+                    <a asp-action="Delete" asp-controller="FreeLancerEducations" asp-route-id="@item.FreelancerEducationid">Delete</a>
                             </td>
                         </tr>
                     }
