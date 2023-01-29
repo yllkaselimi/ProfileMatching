@@ -34,6 +34,21 @@
                     </form>
                 </td>
 
+                  @if (((List<int?>)ViewBag.AppliedJobs).Contains(item.JobPostId)) {
+                        <td>
+                         <form asp-controller="ApplicantsPerJobs" asp-action="UnApply" method="post" asp-route-id="@item.JobPostId">
+                             <button>UnApply</button>
+                         </form>
+                        </td>
+                    }
+                    else
+                    {
+                         <td>
+                         <form asp-controller="ApplicantsPerJobs" asp-action="ApplyForJob" method="post" asp-route-id="@item.JobPostId">
+                             <button>Apply</button>
+                         </form>
+                        </td>  
+                    }
             </tr>
         }
     </tbody>

@@ -107,7 +107,18 @@ namespace ProfileMatching.Controllers
 
         public async Task<IActionResult> MyJobApplications()
         {
+            //kodi qe po na qon rolin e loggedin user te viewbag n view
             var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
+            //i bartim id te puneve qe useri has already applied for me ni viewdata
+            var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
+            ViewData["AppliedJobs"] = appliedJobs;
+
+
             return View(await _context.ApplicantsPerJobs.Where(m => m.UserId == userId).ToListAsync());
         }
 

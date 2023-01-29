@@ -87,6 +87,10 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> MySavedJobs()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
+
+            var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
+            ViewData["AppliedJobs"] = appliedJobs;
+
             return View(await _context.SavedJobs.Where(m => m.UserId == userId).ToListAsync());
         }
 

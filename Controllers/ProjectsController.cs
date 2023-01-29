@@ -64,8 +64,9 @@ namespace ProfileMatching.Controllers
             var roli = RolesForUser[0];
             ViewData["Role"] = roli;
 
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
             return View();
         }
 
@@ -76,17 +77,27 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProjectId,ProjectName,FileName,Description,ProjectWebsite,CategoryId,UserId")] Project project)
         {
-            // if (ModelState.IsValid)
-            // {
-              _context.Add(project);
+
+            _context.Add(project);
          
-               await _context.SaveChangesAsync();
-               return RedirectToAction(nameof(Index));
-             // }
-              ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", project.UserId);
-              ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", project.CategoryId);
+            await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
+            return RedirectToAction(nameof(Index));
+
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", project.UserId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", project.CategoryId);
             
-               return View(project);
+            return View(project);
         }
 
         // GET: Projects/Edit/5
@@ -109,7 +120,7 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", project.UserId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", project.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", project.CategoryId);
             return View(project);
         }
 
@@ -125,26 +136,35 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-           //if (ModelState.IsValid)
-           //{
-                try
-                {
-                    _context.Update(project);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProjectExists(project.ProjectId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                //}
-                //return RedirectToAction(nameof(Index));
+            try
+            {
+                _context.Update(project);
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProjectExists(project.ProjectId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
+            return RedirectToAction(nameof(Index));
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", project.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", project.CategoryId);
             return View(project);
@@ -186,6 +206,17 @@ namespace ProfileMatching.Controllers
             }
             
             await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

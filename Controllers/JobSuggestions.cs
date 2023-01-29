@@ -31,13 +31,17 @@ namespace ProfileMatching.Controllers
 
             var cat = detail.CategoryId;
 
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             var matchingJobPosts = _context.JobPosts.Where(x => x.CategoryId == cat).Include(j => j.Category).ToList();
             /*meqe e kena jobpost t'lidht me categoryId, qikjo .include po i shtohet qe me i include
               dmth data edhe prej tabeles category, n'rast te na me mujt me thirr mandej n'front emrin e kategorise
               me qat categoryId
             */
 
-            var userId = _userManager.GetUserId(HttpContext.User);
 
             //i bartim id te puneve qe useri has already applied for me ni viewdata
             var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();

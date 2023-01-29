@@ -24,6 +24,11 @@ namespace ProfileMatching.Controllers
            .Include(f => f.City)
            .FirstOrDefault(f => f.UserId == userId);
 
+            if (clientInfo == null)
+            {
+                return RedirectToAction("Create", "ClientDetails");
+            }
+
             var jobpost = _context.JobPosts.Include(f => f.Category).Where(f => f.UserId == userId).ToList();
             ViewData["JobPosts"] = jobpost;
             

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,12 @@ namespace ProfileMatching.Controllers
     {
         private readonly DataContext _context;
 
-        public FreelancerEducationsController(DataContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public FreelancerEducationsController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: FreelancerEducations
@@ -46,8 +50,15 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerEducations/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
+            //kodi qe po na qon rolin e loggedin user te viewbag n view
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
             return View();
         }
@@ -59,12 +70,22 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FreelancerEducationid,InstituteName,Degree,FieldOfStudy,StartDate,EndDate,UserId")] FreelancerEducation freelancerEducation)
         {
-            // if (ModelState.IsValid)
-          //  {
-                _context.Add(freelancerEducation);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-          //  }
+
+            _context.Add(freelancerEducation);
+            await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
+            return RedirectToAction(nameof(Index));
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerEducation.UserId);
             return View(freelancerEducation);
         }
@@ -72,6 +93,13 @@ namespace ProfileMatching.Controllers
         // GET: FreelancerEducations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            //kodi qe po na qon rolin e loggedin user te viewbag n view
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             if (id == null || _context.FreelancerEducations == null)
             {
                 return NotFound();
@@ -115,9 +143,20 @@ namespace ProfileMatching.Controllers
                     {
                         throw;
                     }
-                //  }
-                //  return RedirectToAction(nameof(Index));
+                  }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
             }
+
+            return RedirectToAction(nameof(Index));
+            // }
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerEducation.UserId);
             return View(freelancerEducation);
         }
@@ -157,6 +196,17 @@ namespace ProfileMatching.Controllers
             }
             
             await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

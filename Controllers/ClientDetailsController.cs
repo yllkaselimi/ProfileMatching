@@ -41,6 +41,7 @@ namespace ProfileMatching.Controllers
                 .Include(c => c.ApplicationUser)
                 .Include(c => c.City)
                 .FirstOrDefaultAsync(m => m.ClientDetailsId == id);
+
             if (clientDetail == null)
             {
                 return NotFound();
@@ -53,13 +54,23 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Create()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
+
+            var clientInfo = _context.ClientDetails.Include(f => f.ApplicationUser)
+           .Include(f => f.City)
+           .FirstOrDefault(f => f.UserId == userId);
+
+            if (clientInfo != null)
+            {
+                return RedirectToAction("Index", "ClientProfile");
+            }
+
             var user = _context.Users.Where(x => x.Id == userId).First();
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
             ViewData["Role"] = roli;
 
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
-            ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId");
+            ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityName");
             return View();
         }
 
@@ -70,14 +81,23 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ClientDetailsId,UserId,Position,CompanyName,Description,CityId")] ClientDetail clientDetail)
         {
-            //if (ModelState.IsValid)
-            //{
-                _context.Add(clientDetail);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            //}
+            _context.Add(clientDetail);
+            await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Client")
+            {
+                return RedirectToAction("Index", "ClientProfile");
+            }
+
+            return RedirectToAction(nameof(Index));
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", clientDetail.UserId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", clientDetail.CityId);
+            ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityName", clientDetail.CityId);
             return View(clientDetail);
         }
 
@@ -101,7 +121,7 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", clientDetail.UserId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", clientDetail.CityId);
+            ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityName", clientDetail.CityId);
             return View(clientDetail);
         }
 
@@ -117,8 +137,7 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)
-            //{
+
                 try
                 {
                     _context.Update(clientDetail);
@@ -135,8 +154,19 @@ namespace ProfileMatching.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-           // }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Client")
+            {
+                return RedirectToAction("Index", "ClientProfile");
+            }
+
+            return RedirectToAction(nameof(Index));
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", clientDetail.UserId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", clientDetail.CityId);
             return View(clientDetail);

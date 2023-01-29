@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,12 @@ namespace ProfileMatching.Controllers
     {
         private readonly DataContext _context;
 
-        public FreelancerExperiencesController(DataContext context)
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public FreelancerExperiencesController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: FreelancerExperiences
@@ -47,10 +51,17 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerExperiences/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
+            //kodi qe po na qon rolin e loggedin user te viewbag n view
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
-            ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeId");
+            ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeName");
             return View();
         }
 
@@ -61,12 +72,22 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FreelancerExperienceID,UserId,EmploymentTypeId,CompanyName,StartDate,EndDate")] FreelancerExperience freelancerExperience)
         {
-          //  if (ModelState.IsValid)
-           // {
-                _context.Add(freelancerExperience);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-          //  }
+
+            _context.Add(freelancerExperience);
+            await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
+            return RedirectToAction(nameof(Index));
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerExperience.UserId);
             ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeId", freelancerExperience.EmploymentTypeId);
             return View(freelancerExperience);
@@ -75,6 +96,13 @@ namespace ProfileMatching.Controllers
         // GET: FreelancerExperiences/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            //kodi qe po na qon rolin e loggedin user te viewbag n view
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             if (id == null || _context.FreelancerExperiences == null)
             {
                 return NotFound();
@@ -86,7 +114,7 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerExperience.UserId);
-            ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeId", freelancerExperience.EmploymentTypeId);
+            ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeName", freelancerExperience.EmploymentTypeId);
             return View(freelancerExperience);
         }
 
@@ -102,8 +130,6 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-          //  if (ModelState.IsValid)
-         //   {
                 try
                 {
                     _context.Update(freelancerExperience);
@@ -119,11 +145,22 @@ namespace ProfileMatching.Controllers
                     {
                         throw;
                     }
-          //      }
-           //     return RedirectToAction(nameof(Index));
+               }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
             }
+
+            return RedirectToAction(nameof(Index));
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerExperience.UserId);
-            ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeId", freelancerExperience.EmploymentTypeId);
+            ViewData["EmploymentTypeId"] = new SelectList(_context.EmploymentTypes, "EmploymentTypeId", "EmploymentTypeName", freelancerExperience.EmploymentTypeId);
             return View(freelancerExperience);
         }
 
@@ -163,6 +200,17 @@ namespace ProfileMatching.Controllers
             }
             
             await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

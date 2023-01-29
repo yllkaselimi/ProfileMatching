@@ -6,7 +6,8 @@
 
 <h1>FreelancersProfile</h1>
 
-
+<a asp-action="MySavedJobs" asp-controller="SavedJobs">My Saved Jobs >></a> <br />
+<a asp-action="MyJobApplications" asp-controller="ApplicantsPerJobs">My Job Applications >></a> 
 
 <table class="table">
     <thead>
@@ -28,6 +29,12 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.HourlyRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Languages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Overview)
             </th>
             <th></th>
         </tr>
@@ -52,6 +59,15 @@
             </td>
             <td>
                 @Model.HourlyRate
+            </td>
+            <td>
+                @Model.Languages
+            </td>
+            <td>
+                @Model.Overview
+            </td>
+            <td>
+                <a asp-action="Edit" asp-controller="FreelancerDetails" asp-route-id="@Model.FreelancerDetailsId">Edit</a> 
             </td>
         </tr>
 </table>
@@ -80,9 +96,10 @@
                 <label>Category</label>
                 @ViewBag.Category
             </th>
+
+
             <th>
-                <label>User</label>
-                @ViewBag.ApplicationUser
+                 <a asp-controller="Projects" asp-action="Create">Add New</a>
             </th>
 
         </tr>
@@ -108,12 +125,9 @@
                 <td>
                     @item.Category.CategoryName
                 </td>
-                <td>
-                    @item.ApplicationUser
-                </td>
+
                 <td>
                     <a asp-action="Edit" asp-controller="Projects" asp-route-id="@item.ProjectId">Edit</a> |
-                    <a asp-action="Details" asp-controller="Projects" asp-route-id="@item.ProjectId">Details</a> |
                     <a asp-action="Delete" asp-controller="Projects" asp-route-id="@item.ProjectId">Delete</a>
                 </td>
             </tr>
@@ -127,12 +141,12 @@
             <thead>
                 <tr>
                     <th>
-                        <label>User</label>
-                        @ViewBag.ApplicationUser
-                    </th>
-                    <th>
                         <label>CompanyName</label>
                         @ViewBag.CompanyName
+                    </th>
+                    <th>
+                        <label>EmploymentType</label>
+                        @ViewBag.EmploymentType
                     </th>
                     <th>
                         <label>StartDate</label>
@@ -142,6 +156,10 @@
                         <label>EndDate</label>
                         @ViewBag.EndDate
                     </th>
+
+            <th>
+                 <a asp-controller="FreelancerExperiences" asp-action="Create">Add New</a>
+            </th>
                 </tr>
             </thead>
             <tbody>
@@ -149,10 +167,10 @@
                 {
                     <tr>
                         <td>
-                            @item.ApplicationUser
+                            @item.CompanyName
                         </td>
                         <td>
-                            @item.CompanyName
+                            @item.EmploymentType.EmploymentTypeName
                         </td>
                         <td>
                             @item.StartDate
@@ -162,9 +180,8 @@
 
                         </td>
                         <td>
-                    <a asp-action="Edit" asp-controller="FreelancersExperiences" asp-route-id=Viewbag.FreeLancerExperienceID>Edit</a> |
-                    <a asp-action="Details" asp-controller="FreelancerExperiences" asp-route-id="@item.FreelancerExperienceID">Details</a> |
-                            <a asp-action="Delete" asp-controller="FreelancerExperiences" asp-route-id="@item.FreelancerExperienceID">Delete</a>
+                    <a asp-action="Edit" asp-controller="FreelancerExperiences" asp-route-id=@item.FreelancerExperienceID>Edit</a> |
+                     <a asp-action="Delete" asp-controller="FreelancerExperiences" asp-route-id="@item.FreelancerExperienceID">Delete</a>
                         </td>
                     </tr>
                 }
@@ -195,10 +212,11 @@
                             @ViewBag.EndDate
                         </th>
                         
-                        <th>
-                            <label>User</label>
-                            @ViewBag.ApplicationUser
-                        </th>
+
+
+            <th>
+                 <a asp-controller="FreelancerEducations" asp-action="Create">Add New</a>
+            </th>
                        
                     </tr>
                 </thead>
@@ -221,12 +239,9 @@
                        <td>
                             @item.EndDate
                          </td>
-                            <td>
-                                @item.ApplicationUser
-                            </td>
+
                             <td>
                                 <a asp-action="Edit" asp-controller="FreeLancerEducations" asp-route-id="@item.FreelancerEducationid">Edit</a> |
-                    <a asp-action="Details" asp-controller="FreeLancerEducations" asp-route-id="@item.FreelancerEducationid">Details</a> |
                     <a asp-action="Delete" asp-controller="FreeLancerEducations" asp-route-id="@item.FreelancerEducationid">Delete</a>
                             </td>
                         </tr>

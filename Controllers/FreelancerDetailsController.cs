@@ -54,6 +54,17 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Create()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
+
+            var freeLancerInfo = _context.FreelancerDetails.Include(f => f.ApplicationUser)
+           .Include(f => f.City)
+           .Include(f => f.Category)
+           .FirstOrDefault(f => f.UserId == userId);
+
+            if (freeLancerInfo != null)
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
             var user = _context.Users.Where(x => x.Id == userId).First();
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
@@ -72,12 +83,22 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FreelancerDetailsId,CategoryId,CityId,HourlyRate,Languages,Overview,UserId")] FreelancerDetails freelancerDetails)
         {
-          //  if (ModelState.IsValid)
-           // {
-                _context.Add(freelancerDetails);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-          //  }
+
+            _context.Add(freelancerDetails);
+            await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            } 
+
+            return RedirectToAction(nameof(Index));
+          
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerDetails.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", freelancerDetails.CategoryId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", freelancerDetails.CityId);
@@ -139,8 +160,18 @@ namespace ProfileMatching.Controllers
                         throw;
                     }
                }
-                return RedirectToAction(nameof(Index));
-          //  }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+            return RedirectToAction(nameof(Index));
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerDetails.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", freelancerDetails.CategoryId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", freelancerDetails.CityId);
@@ -184,6 +215,17 @@ namespace ProfileMatching.Controllers
             }
             
             await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Freelancer")
+            {
+                return RedirectToAction("Index", "FreelancerProfile");
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

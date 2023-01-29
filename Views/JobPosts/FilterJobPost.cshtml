@@ -94,7 +94,7 @@ else{
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.CategoryName)
                 </td>
-                 @if (ViewBag.Role == "Client" || ViewBag.Role == "Admin" )
+                 @if (ViewBag.Role == "Admin" )
                 {
                     <td>
                 <a asp-action="Edit" asp-route-id="@item.JobPostId">Edit</a> |

@@ -26,10 +26,15 @@ namespace ProfileMatching.Controllers
            .Include(f => f.Category)
            .FirstOrDefault(f => f.UserId == userId);
 
+            if (freeLancerInfo == null)
+            {
+                return RedirectToAction("Create", "FreelancerDetails");
+            }
+
             var projekti = _context.Projects.Include(f => f.Category).Where(f => f.UserId == userId).ToList();
             ViewData["Projects"] = projekti;
 
-            var freelancerexperience = _context.FreelancerExperiences.Where(f => f.UserId == userId).ToList();
+            var freelancerexperience = _context.FreelancerExperiences.Include(f => f.EmploymentType).Where(f => f.UserId == userId).ToList();
             ViewData["FreeLancerExperiences"] = freelancerexperience;
 
             var freelancereducation = _context.FreelancerEducations.Where(f => f.UserId == userId).ToList();

@@ -52,13 +52,19 @@ else
             <th>
                 @Html.DisplayNameFor(model => model.HourlyRate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Languages)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Overview)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                <td>
+@foreach (var item in Model) {
+        <tr>
+            <td>
                 @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
             </td>
             <td>
@@ -75,6 +81,12 @@ else
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.HourlyRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Languages)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Overview)
             </td>
 
         </tr>

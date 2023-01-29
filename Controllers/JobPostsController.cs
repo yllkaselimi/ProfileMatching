@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,7 +27,7 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Index()
         {
             ViewData["Categories"] = _context.Categories.ToList();
-            var dataContext = _context.JobPosts.Include(j => j.Category);
+            var dataContext = _context.JobPosts.Include(j => j.Category).Include(j=> j.ApplicationUser);
 
             //kodi qe po na qon rolin e loggedin user te viewbag n view
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -49,8 +50,15 @@ namespace ProfileMatching.Controllers
 
 
         // GET: JobPosts/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
             return View();
         }
@@ -62,12 +70,22 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId,UserId")] JobPost jobPost)
         {
-            //if (ModelState.IsValid)
-            //{
+
             _context.Add(jobPost);
             await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Client")
+            {
+                return RedirectToAction("Index", "ClientProfile");
+            }
+
             return RedirectToAction(nameof(Index));
-            //}
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", jobPost.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", jobPost.CategoryId);
             return View(jobPost);
         }
@@ -75,6 +93,12 @@ namespace ProfileMatching.Controllers
         // GET: JobPosts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+            ViewData["Role"] = roli;
+
             if (id == null || _context.JobPosts == null)
             {
                 return NotFound();
@@ -85,6 +109,7 @@ namespace ProfileMatching.Controllers
             {
                 return NotFound();
             }
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", jobPost.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", jobPost.CategoryId);
             return View(jobPost);
         }
@@ -101,13 +126,11 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)
-            //{
             try
             {
                 _context.Update(jobPost);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -119,9 +142,21 @@ namespace ProfileMatching.Controllers
                 {
                     throw;
                 }
-                //}
-                //return RedirectToAction(nameof(Index));
+
             }
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Client")
+            {
+                return RedirectToAction("Index", "ClientProfile");
+            }
+
+            return RedirectToAction(nameof(Index));
+            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", jobPost.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", jobPost.CategoryId);
             return View(jobPost);
         }
@@ -161,7 +196,19 @@ namespace ProfileMatching.Controllers
             }
 
             await _context.SaveChangesAsync();
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+            var RolesForUser = await _userManager.GetRolesAsync(user);
+            var roli = RolesForUser[0];
+
+            if (roli == "Client")
+            {
+                return RedirectToAction("Index", "ClientProfile");
+            }
+
             return RedirectToAction(nameof(Index));
+
         }
         private bool JobPostExists(int id)
         {
@@ -190,7 +237,7 @@ namespace ProfileMatching.Controllers
             var savedJobs = _context.SavedJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["SavedJobs"] = savedJobs;
 
-            var allJobs = _context.JobPosts.Include(j => j.Category);
+            var allJobs = _context.JobPosts.Include(j => j.Category).Include(j => j.ApplicationUser);
             var result = allJobs.Where(f => f.Category.CategoryName.ToLower().Contains(teksti.ToLower())
                 || f.JobPostName.ToLower().Contains(teksti.ToLower()));
 

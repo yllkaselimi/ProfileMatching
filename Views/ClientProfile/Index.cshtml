@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Client Profile</h1>
 
 
 <table class="table">
@@ -23,7 +23,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.CityId)
             </th>
-            <th></th>
+
         </tr>
     </thead>
     <tbody>
@@ -39,6 +39,9 @@
             </td>
             <td>
                 @Model.City.CityName
+            </td>
+            <td>
+                <a asp-action="Edit" asp-controller="ClientDetails" asp-route-id="@Model.ClientDetailsId">Edit</a> 
             </td>
         </tr>
     </tbody>
@@ -73,7 +76,9 @@
                 <label>Category</label>
                 @ViewBag.Category
             </th>
-            <th></th>
+            <th>
+                <a asp-controller="JobPosts" asp-action="Create">Create New</a>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -97,6 +102,12 @@
                 <td>
                     @item.Category.CategoryName
                 </td>
+                    <td>
+                <a asp-controller="JobPosts" asp-action="Edit" asp-route-id="@item.JobPostId">Edit</a> |
+                <a asp-controller="JobPosts" asp-action="Delete" asp-route-id="@item.JobPostId">Delete</a> |
+                <a asp-controller="ApplicantsPerJobs" asp-action="ShowJobApplicants" asp-route-id="@item.JobPostId">Show Applicants</a> |
+                <a asp-controller="Freelancers" asp-action="Suggested" asp-route-id="@item.Category.CategoryId">Suggested Freelancers</a>
+            </td>
             </tr>
           
             }
