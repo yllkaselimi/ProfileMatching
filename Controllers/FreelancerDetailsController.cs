@@ -55,11 +55,15 @@ namespace ProfileMatching.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
+            //nihere po e kqyrim se freelancer qe eshte logged in a ka freelancerDetails n'databaz
             var freeLancerInfo = _context.FreelancerDetails.Include(f => f.ApplicationUser)
            .Include(f => f.City)
            .Include(f => f.Category)
            .FirstOrDefault(f => f.UserId == userId);
 
+            /*nese freelancer already ka shti freelancerDetails n'databaz, e kthen te profili,
+             dmth spo dojm me leju me shku te create form prap, se veq ni here ka t drejte
+             me shti freelancerDetails per veten n'databaz */
             if (freeLancerInfo != null)
             {
                 return RedirectToAction("Index", "FreelancerProfile");
@@ -92,11 +96,15 @@ namespace ProfileMatching.Controllers
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
 
+            /*po kqyrim a osht roli i userit qe pe perdor create form freelancer,
+              qe dmth nese freelancer i ka shti per veten t dhanat,
+              me qu masi qe e bon formen submit nprofil t vetin me i pa t dhanat */
             if (roli == "Freelancer")
             {
                 return RedirectToAction("Index", "FreelancerProfile");
-            } 
+            }
 
+            //perndryshe nese se ka rolin freelancer, i bjen qe osht Admin edhe shkon te indexi
             return RedirectToAction(nameof(Index));
           
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerDetails.UserId);
@@ -142,8 +150,6 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-           // if (ModelState.IsValid)
-            //{
                 try
                 {
                     _context.Update(freelancerDetails);
@@ -166,16 +172,21 @@ namespace ProfileMatching.Controllers
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
 
+            /*po kqyrim a osht roli i userit qe pe perdor edit form freelancer,
+             qe dmth nese freelancer i ka edit per veten t dhanat,
+             me qu masi qe e bon formen submit nprofil t vetin me i pa t dhanat */
             if (roli == "Freelancer")
             {
                 return RedirectToAction("Index", "FreelancerProfile");
             }
+
+            //perndryshe nese se ka rolin freelancer, i bjen qe osht Admin edhe shkon te indexi
             return RedirectToAction(nameof(Index));
 
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", freelancerDetails.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", freelancerDetails.CategoryId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", freelancerDetails.CityId);
-            return View(freelancerDetails);
+            
         }
 
         // GET: FreelancerDetails/Delete/5

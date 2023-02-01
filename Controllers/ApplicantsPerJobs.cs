@@ -28,15 +28,18 @@ namespace ProfileMatching.Controllers
         [HttpPost]
         public async Task<IActionResult> ApplyForJob(int id)
         {
+            //merr id te logged in user
             var userId = _userManager.GetUserId(HttpContext.User);
 
+            /*krijohet ni instance e re e klases ApplicantsPerJob me id t userit edhe
+              job id qe po pranohet n metode*/
             var itemToAdd = new ApplicantsPerJob
             {
                 UserId = userId,
                 JobPostId = id
             };
 
-
+            //check nese ekziston ndatabaz ni record/rresht ku veq useri veq ka apliku per qat job
             if((_context.ApplicantsPerJobs.Any(p => p.JobPostId == id && p.UserId == userId)))
             {
                 TempData["Message"] = "You already applied for this job";
@@ -74,6 +77,7 @@ namespace ProfileMatching.Controllers
 
             var job =_context.JobPosts.Where(x => x.JobPostId == id).First();
             ViewData["JobName"] = job.JobPostName;
+            //^qitu jobName e kena marr veq per me "bajt" n view tani me mujt me ja thirr
 
             var applicants = await _context.ApplicantsPerJobs.Where(m => m.JobPostId == id).ToListAsync();
             if (applicants == null)
@@ -109,9 +113,9 @@ namespace ProfileMatching.Controllers
         {
             //kodi qe po na qon rolin e loggedin user te viewbag n view
             var userId = _userManager.GetUserId(HttpContext.User);
-            var user = _context.Users.Where(x => x.Id == userId).First();
-            var RolesForUser = await _userManager.GetRolesAsync(user);
-            var roli = RolesForUser[0];
+            var user = _context.Users.Where(x => x.Id == userId).First(); //nbaz t ids e marrin prej databaze krejt userin
+            var RolesForUser = await _userManager.GetRolesAsync(user); //ja kqyrim rolet
+            var roli = RolesForUser[0]; //e marrim veq rolin e pare dmth npoziten 0
             ViewData["Role"] = roli;
 
             //i bartim id te puneve qe useri has already applied for me ni viewdata

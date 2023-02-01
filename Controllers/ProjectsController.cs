@@ -87,17 +87,20 @@ namespace ProfileMatching.Controllers
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
 
+            /*po kqyrim a osht roli i userit qe po e perdor create project freelancer,
+              qe dmth nese o freelancer ka me shtu projekt t'vetin,
+              edhe me qu masi qe e bon formen submit nprofil t vetin me i pa t dhanat */
             if (roli == "Freelancer")
             {
                 return RedirectToAction("Index", "FreelancerProfile");
             }
 
+            //qe sosht freelancer i bjen osht admin, edhe e kthen te index
             return RedirectToAction(nameof(Index));
 
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", project.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", project.CategoryId);
-            
-            return View(project);
+
         }
 
         // GET: Projects/Edit/5
@@ -163,11 +166,11 @@ namespace ProfileMatching.Controllers
                 return RedirectToAction("Index", "FreelancerProfile");
             }
 
+            //perndryshe, nese sosht freelancer i bjen osht admin edhe veq e kthen te index i projektev
             return RedirectToAction(nameof(Index));
 
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", project.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", project.CategoryId);
-            return View(project);
         }
 
         // GET: Projects/Delete/5

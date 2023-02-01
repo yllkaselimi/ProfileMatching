@@ -37,6 +37,7 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
+            //marrim veq details t client me id qe e pranon metoda
             var clientDetail = await _context.ClientDetails
                 .Include(c => c.ApplicationUser)
                 .Include(c => c.City)
@@ -53,12 +54,17 @@ namespace ProfileMatching.Controllers
         // GET: ClientDetails/Create
         public async Task<IActionResult> Create()
         {
+            //e marrim id t klientit logged in
             var userId = _userManager.GetUserId(HttpContext.User);
 
+            //nihere po e kqyrim se klienti qe eshte logged in a ka clientDetails n'databaz
             var clientInfo = _context.ClientDetails.Include(f => f.ApplicationUser)
            .Include(f => f.City)
            .FirstOrDefault(f => f.UserId == userId);
 
+            /*nese klienti already ka shti clientDetails n'databaz, e kthen te profili,
+             dmth spo dojm me leju me shku te create form prap, se veq ni here ka t drejte
+             me shti clientDetails per veten n'databaz */
             if (clientInfo != null)
             {
                 return RedirectToAction("Index", "ClientProfile");
@@ -89,16 +95,20 @@ namespace ProfileMatching.Controllers
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
 
+            /*po kqyrim a osht roli i userit qe pe perdor create form klient,
+              qe dmth nese klienti i ka shti per veten t dhanat,
+              me qu masi qe e bon formen submit nprofil t vetin me i pa t dhanat */
             if (roli == "Client")
             {
                 return RedirectToAction("Index", "ClientProfile");
             }
 
+            //perndryshe nese se ka rolin client, i bjen qe osht Admin edhe shkon te indexi
             return RedirectToAction(nameof(Index));
 
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", clientDetail.UserId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityName", clientDetail.CityId);
-            return View(clientDetail);
+            
         }
 
         // GET: ClientDetails/Edit/5
@@ -137,39 +147,41 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-
-                try
+            try
+            {
+                _context.Update(clientDetail);
+                 await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ClientDetailExists(clientDetail.ClientDetailsId))
                 {
-                    _context.Update(clientDetail);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClientDetailExists(clientDetail.ClientDetailsId))
+                else
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+            }
 
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _context.Users.Where(x => x.Id == userId).First();
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
 
+            /*po kqyrim a osht roli i userit qe pe perdor edit form klient,
+              qe dmth nese klienti i ka edit per veten t dhanat,
+              me qu masi qe e bon formen submit nprofil t vetin me i pa t dhanat */
             if (roli == "Client")
             {
                 return RedirectToAction("Index", "ClientProfile");
             }
 
+            //perndryshe nese se ka rolin client, i bjen qe osht Admin edhe shkon te indexi
             return RedirectToAction(nameof(Index));
 
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", clientDetail.UserId);
             ViewData["CityId"] = new SelectList(_context.Cities, "CityId", "CityId", clientDetail.CityId);
-            return View(clientDetail);
         }
 
         // GET: ClientDetails/Delete/5

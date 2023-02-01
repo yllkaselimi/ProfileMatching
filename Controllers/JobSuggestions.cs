@@ -21,6 +21,7 @@ namespace ProfileMatching.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
  
+            //i marrim freelancerDetails te freelancer qe osht logged in
             var detail = _context.FreelancerDetails.FirstOrDefault(x => x.UserId == user.Id);
 
             //niher check qaj user a i ka qit freelancer detials nprofil (se na vyn kategoria), nqs jo, e qon te faqja me create freelancer details
@@ -29,7 +30,7 @@ namespace ProfileMatching.Controllers
                 return RedirectToAction("Create", "FreelancerDetails");
             }
 
-            var cat = detail.CategoryId;
+            var cat = detail.CategoryId; //prej freelancers details t'qatij useri, po e marrim veq kategorine
 
             var userId = _userManager.GetUserId(HttpContext.User);
             var RolesForUser = await _userManager.GetRolesAsync(user);
@@ -47,7 +48,7 @@ namespace ProfileMatching.Controllers
             var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["AppliedJobs"] = appliedJobs;
 
-            //i bartim id te puneve qe useri has already saves for me ni viewdata
+            //i bartim id te puneve qe useri has already saved me ni viewdata
             var savedJobs = _context.SavedJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["SavedJobs"] = savedJobs;
 

@@ -30,12 +30,15 @@ namespace ProfileMatching.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
+            /*krijohet ni instance e re e klases SavedJob me id t userit edhe
+              job id qe po pranohet n metode*/
             var itemToAdd = new SavedJob
             {
                 UserId = userId,
                 JobPostId = id
             };
 
+            //check nese ekziston ndatabaz ni record/rresht ku veq useri veq e ka bo save qat job
             if ((_context.SavedJobs.Any(p => p.JobPostId == id && p.UserId == userId)))
             {
                 TempData["Message2"] = "You already saved this job";
@@ -64,7 +67,7 @@ namespace ProfileMatching.Controllers
         }
 
 
-        //kto e perdor veq admini, e merr id te savedjob
+        //kto e perdor veq admini, e merr id savedjobID
         public async Task<IActionResult> DeleteSave(int? id)
         {
             if (_context.SavedJobs == null)
@@ -87,10 +90,14 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> MySavedJobs()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
+            //e merr id t userit qe osht logged in, qe me ja shfaq saved jobs t tij
 
+            /*po i marrim edhe applied jobs, per arsye se kur e sheh useri listen e saved jobs,
+              aty me mujt me ja shfaq edhe butonin apply apo unapply */
             var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["AppliedJobs"] = appliedJobs;
 
+            //return saved jobs
             return View(await _context.SavedJobs.Where(m => m.UserId == userId).ToListAsync());
         }
 

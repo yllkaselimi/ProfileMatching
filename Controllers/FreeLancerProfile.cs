@@ -26,11 +26,14 @@ namespace ProfileMatching.Controllers
            .Include(f => f.Category)
            .FirstOrDefault(f => f.UserId == userId);
 
+            /*nese ndatabaz freelancerDetails jon empty, i bjen qe hala freelancer ska shti detials per veten,
+            kshtuqe t'shtin niher me shku te Create form per freelancerDetails para sa me shku tani te profili*/
             if (freeLancerInfo == null)
             {
                 return RedirectToAction("Create", "FreelancerDetails");
             }
 
+            //t dhanat prej tabelave tjera meqe smujm mi bo return, veq i bartim me viewData
             var projekti = _context.Projects.Include(f => f.Category).Where(f => f.UserId == userId).ToList();
             ViewData["Projects"] = projekti;
 

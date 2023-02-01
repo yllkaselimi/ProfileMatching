@@ -79,15 +79,17 @@ namespace ProfileMatching.Controllers
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
 
+            //nqs po krijon jobPost klienti, e qon mandej te profili i vet me i pa t'dhanat
             if (roli == "Client")
             {
                 return RedirectToAction("Index", "ClientProfile");
             }
 
+            //perndryshe, nese sosht klient po admin, e qon te indexi
             return RedirectToAction(nameof(Index));
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", jobPost.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", jobPost.CategoryId);
-            return View(jobPost);
         }
 
         // GET: JobPosts/Edit/5
@@ -255,6 +257,7 @@ namespace ProfileMatching.Controllers
 
             ViewData["Categories"] = _context.Categories.ToList();
 
+            //po e marrim kategorine qe e kena select (dmth prej id qe e pranon metoda)
             var category = _context.Categories.Where(x => x.CategoryId == id).First();
             ViewData["FilteredCategoryName"] = category.CategoryName;
 
@@ -266,6 +269,7 @@ namespace ProfileMatching.Controllers
             var savedJobs = _context.SavedJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["SavedJobs"] = savedJobs;
 
+            //i marrim punt me qat kategori
             var jobpostvar = _context.JobPosts
                 .Include(f => f.Category)
                 .Where(f => f.Category.CategoryId == id);
