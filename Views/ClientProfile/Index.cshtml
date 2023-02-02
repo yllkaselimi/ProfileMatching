@@ -76,6 +76,10 @@
                 <label>Category</label>
                 @ViewBag.Category
             </th>
+            <th>Client Name</th>
+            <th>
+                CompanyName
+            </th>
             <th>
                 <a asp-controller="JobPosts" asp-action="Create">Create New</a>
             </th>
@@ -101,6 +105,13 @@
                 </td>
                 <td>
                     @item.Category.CategoryName
+                </td>
+                <td>
+                    @item.ApplicationUser.FirstName
+                    @item.ApplicationUser.LastName
+                </td>
+                <td>
+                    @item.CompanyName
                 </td>
                     <td>
                 <a asp-controller="JobPosts" asp-action="Edit" asp-route-id="@item.JobPostId">Edit</a> |

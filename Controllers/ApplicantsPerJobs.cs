@@ -122,8 +122,14 @@ namespace ProfileMatching.Controllers
             var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["AppliedJobs"] = appliedJobs;
 
+            var jobs = _context.ApplicantsPerJobs
+              .Where(m => m.UserId == userId)
+              .Include(m => m.JobPost)
+              .Include(m => m.JobPost.Category)
+              .Include(m => m.ApplicationUser)
+              .ToListAsync();
 
-            return View(await _context.ApplicantsPerJobs.Where(m => m.UserId == userId).ToListAsync());
+            return View(await jobs);
         }
 
 

@@ -27,7 +27,7 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Index()
         {
             ViewData["Categories"] = _context.Categories.ToList();
-            var dataContext = _context.JobPosts.Include(j => j.Category).Include(j=> j.ApplicationUser);
+            var dataContext = _context.JobPosts.Include(j => j.Category).Include(j => j.ApplicationUser);
 
             //kodi qe po na qon rolin e loggedin user te viewbag n view
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -70,7 +70,7 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId,UserId")] JobPost jobPost)
         {
-
+            jobPost.CompanyName = _context.ClientDetails.FirstOrDefault(x => x.UserId == jobPost.UserId).CompanyName;
             _context.Add(jobPost);
             await _context.SaveChangesAsync();
 
@@ -130,6 +130,7 @@ namespace ProfileMatching.Controllers
 
             try
             {
+                jobPost.CompanyName = _context.ClientDetails.FirstOrDefault(x => x.UserId == jobPost.UserId).CompanyName;
                 _context.Update(jobPost);
                 await _context.SaveChangesAsync();
                 
@@ -160,7 +161,7 @@ namespace ProfileMatching.Controllers
             return RedirectToAction(nameof(Index));
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", jobPost.UserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", jobPost.CategoryId);
-            return View(jobPost);
+            
         }
 
         // GET: JobPosts/Delete/5
@@ -241,7 +242,10 @@ namespace ProfileMatching.Controllers
 
             var allJobs = _context.JobPosts.Include(j => j.Category).Include(j => j.ApplicationUser);
             var result = allJobs.Where(f => f.Category.CategoryName.ToLower().Contains(teksti.ToLower())
-                || f.JobPostName.ToLower().Contains(teksti.ToLower()));
+                || f.JobPostName.ToLower().Contains(teksti.ToLower())
+                || f.ApplicationUser.FirstName.ToLower().Contains(teksti.ToLower())
+                || f.ApplicationUser.LastName.ToLower().Contains(teksti.ToLower())
+                || f.CompanyName.ToLower().Contains(teksti.ToLower()));
 
             return View(await result.ToListAsync());
         }

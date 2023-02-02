@@ -22,6 +22,7 @@ namespace ProfileMatching.Models
         [ForeignKey("UserId")]
         public ApplicationUser ApplicationUser { get; set; }
 
+        public string? CompanyName { get; set; }
 
 
 
