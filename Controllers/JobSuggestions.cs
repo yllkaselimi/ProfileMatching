@@ -37,7 +37,7 @@ namespace ProfileMatching.Controllers
             var roli = RolesForUser[0];
             ViewData["Role"] = roli;
 
-            var matchingJobPosts = _context.JobPosts.Where(x => x.CategoryId == cat).Include(j => j.Category).ToList();
+            var matchingJobPosts = _context.JobPosts.Where(x => x.CategoryId == cat).Include(j => j.Category).Include(j => j.ApplicationUser).ToList();
             /*meqe e kena jobpost t'lidht me categoryId, qikjo .include po i shtohet qe me i include
               dmth data edhe prej tabeles category, n'rast te na me mujt me thirr mandej n'front emrin e kategorise
               me qat categoryId
