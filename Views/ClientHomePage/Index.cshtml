@@ -4,6 +4,35 @@
     ViewData["Title"] = "Index";
 }
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <label>Slider ID</label>
+                @ViewBag.SliderId
+            </th>
+            <th>
+                <label>Slider Title</label>
+                @ViewBag.SliderTitle
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.Sliders)
+        {
+            <tr>
+                <td>
+                    @item.SliderId
+                </td>
+                <td>
+                    @item.SliderTitle
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
 
 <a asp-action="Create" asp-controller="JobPosts">Create a New Job Post</a>
 
@@ -78,3 +107,5 @@
 
 
 <a asp-action="Index" asp-controller="Freelancers">View All Freelancers</a>
+
+

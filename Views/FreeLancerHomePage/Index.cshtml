@@ -6,6 +6,37 @@
 
 <h1>Job Posts</h1>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <label>Slider ID</label>
+                @ViewBag.SliderId
+            </th>
+            <th>
+                <label>Slider Title</label>
+                @ViewBag.SliderTitle
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.Sliders)
+        {
+            <tr>
+                <td>
+                    @item.SliderId
+                </td>
+                <td>
+                    @item.SliderTitle
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+
     @if (TempData["SuccessfulApplication"] != null)
     {
         <script type="text/javascript">

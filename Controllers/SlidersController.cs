@@ -55,12 +55,12 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SliderId,SliderTitle,SliderFilename")] Slider slider)
         {
-            if (ModelState.IsValid)
-            {
+           // if (ModelState.IsValid)
+           // {
                 _context.Add(slider);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+          //  }
             return View(slider);
         }
 
@@ -92,8 +92,8 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+        //    if (ModelState.IsValid)
+        //    {
                 try
                 {
                     _context.Update(slider);
@@ -109,7 +109,7 @@ namespace ProfileMatching.Controllers
                     {
                         throw;
                     }
-                }
+             //   }
                 return RedirectToAction(nameof(Index));
             }
             return View(slider);
