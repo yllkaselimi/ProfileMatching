@@ -28,13 +28,34 @@ namespace ProfileMatching.Controllers
                 var userId = _userManager.GetUserId(HttpContext.User);
                 var user = _context.Users.Where(x => x.Id == userId).First();
 
-
                 var allJobPosts = _context.JobPosts.Include(j => j.Category).Include(j => j.ApplicationUser);
                 ViewData["RecentJobPosts"] = allJobPosts.OrderByDescending(j => j.JobPostId).Take(3);
 
-                var userCategory = _context.FreelancerDetails.FirstOrDefault(x => x.UserId == userId).CategoryId;
-                var matchingJobPosts = allJobPosts.Where(x => x.CategoryId == userCategory).OrderByDescending(j => j.JobPostId).Take(3);
-                ViewData["MatchingJobPosts"] = matchingJobPosts;
+                //nese ski freelancer details, niher t shtin me i create
+                if (User.IsInRole("Freelancer")){
+                    var freeLancerInfo = _context.FreelancerDetails.FirstOrDefault(f => f.UserId == userId);
+
+                    if (freeLancerInfo == null)
+                    {
+                        return RedirectToAction("Create", "FreelancerDetails");
+                    }
+
+                    var userCategory = _context.FreelancerDetails.FirstOrDefault(x => x.UserId == userId).CategoryId;
+                    var matchingJobPosts = allJobPosts.Where(x => x.CategoryId == userCategory).OrderByDescending(j => j.JobPostId).Take(3);
+                    ViewData["MatchingJobPosts"] = matchingJobPosts;
+                }
+
+                //nese ski client details, niher t shtin me i create
+                if (User.IsInRole("Client"))
+                {
+                    var clientInfo = _context.ClientDetails.FirstOrDefault(f => f.UserId == userId);
+
+                    if (clientInfo == null)
+                    {
+                        return RedirectToAction("Create", "ClientDetails");
+                    }
+                }
+
 
                 //i bartim id te puneve qe useri has already applied for me ni viewdata
                 var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
