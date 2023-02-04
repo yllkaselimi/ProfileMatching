@@ -35,7 +35,7 @@ namespace ProfileMatching.Controllers
             //t dhanat prej tabelave tjera meqe smujm mi bo return, veq i bartim me viewData
             var jobpost = _context.JobPosts.Include(f => f.Category).Where(f => f.UserId == userId).ToList();
             ViewData["JobPosts"] = jobpost;
-            
+
             return View(clientInfo);
         }
     }

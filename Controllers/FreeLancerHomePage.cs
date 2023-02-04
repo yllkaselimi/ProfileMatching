@@ -36,6 +36,9 @@ namespace ProfileMatching.Controllers
             var savedJobs = _context.SavedJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["SavedJobs"] = savedJobs;
 
+            var slider = _context.Sliders.ToList();
+            ViewData["Sliders"] = slider;
+
             return View(dataContext.OrderByDescending(j => j.JobPostId).Take(3));
 
         }
