@@ -1,224 +1,132 @@
 ﻿@model ProfileMatching.Models.FreelancerDetails
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Freelancer's Profile";
 }
 
-<h1>FreelancersProfile</h1>
+<div class="container mt-4 mb-4">
+    <div class="row">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">@Model.ApplicationUser.FirstName @Model.ApplicationUser.LastName</h3>
+                    <p class="card-text">@Model.Overview</p>
+                    <a href="mailto:@Model.ApplicationUser.Email" class="btn btn-success w-100">Contact me</a>
+                    <hr class="hr mt-4 mb-4" />
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="card-title">Details</h4>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="p fw-bold">Field</div>
+                        <div class="p">@Model.Category.CategoryName</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="p fw-bold">Hourly Rate</div>
+                        <div class="p">@Model.HourlyRate €</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="p fw-bold">Location</div>
+                        <div class="p">@Model.City.CityName</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="p fw-bold">Field</div>
+                        <div class="p">@Model.Category.CategoryName</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="p fw-bold">Languages</div>
+                        <div class="p">@Model.Languages</div>
+                    </div>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category.CategoryName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City.CityName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HourlyRate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Languages)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Overview)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        <tr>
-            <td>
-                @Model.ApplicationUser.Email
-            </td>
-            <td>
-                @Model.ApplicationUser.FirstName
-            </td>
-            <td>
-                @Model.ApplicationUser.LastName
-            </td>
-            <td>
-                @Model.Category.CategoryName
-            </td>
-            <td>
-                @Model.City.CityName
-            </td>
-            <td>
-                @Model.HourlyRate
-            </td>
-            <td>
-                @Model.Languages
-            </td>
-            <td>
-                @Model.Overview
-            </td>
-        </tr>
-</table>
-<h2>Projects</h2>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <label>Name</label>
-                @ViewBag.ProjectName
-            </th>
-            <th>
-              <label>FileName</label>
-               @ViewBag.FileName
-            </th>
-            <th>
-                <label>Description</label>
-                @ViewBag.Description
-            </th>
-            <th>
-                <label>ProjectWebsite</label>
-                @ViewBag.ProjectsWebsite
-            </th>
-            <th>
-                <label>Category</label>
-                @ViewBag.Category
-            </th>
-
-        </tr>
-    </thead>
 
 
-    <tbody>
-        @foreach (var item in ViewBag.Projects)
-        {
-            <tr>
-                <td>
-                    @item.ProjectName
-                </td>
-                <td>
-                    @item.FileName
-                </td>
-                <td>
-                    @item.Description
-                </td>
-                <td>
-                    @item.ProjectWebsite
-                </td>
-                <td>
-                    @item.Category.CategoryName
-                </td>
+                    <hr class="hr mt-4 mb-4" />
 
-            </tr>
-        }
-    </tbody>
-</table>
 
-<h2>Freelancer Experience</h2>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        <label>CompanyName</label>
-                        @ViewBag.CompanyName
-                    </th>
-                    <th>
-                        <label>EmploymentType</label>
-                        @ViewBag.EmploymentType
-                    </th>
-                    <th>
-                        <label>StartDate</label>
-                        @ViewBag.StartDate
-                    </th>
-                    <th>
-                        <label>EndDate</label>
-                        @ViewBag.EndDate
-                    </th>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="card-title">Experience</h4>
+                    </div>
 
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in ViewBag.FreeLancerExperiences)
-                {
-                    <tr>
-                        <td>
-                            @item.CompanyName
-                        </td>
-                        <td>
-                            @item.EmploymentType.EmploymentTypeName
-                        </td>
-                        <td>
-                            @item.StartDate
-                        </td>
-                        <td>
-                            @item.EndDate
-
-                        </td>
-
-                    </tr>
-                }
-</table>
-
-<h2>Freelancer Educations</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            <label>InstituteName</label>
-                            @ViewBag.InstituteName
-                        </th>
-                        <th>
-                            <label>Degree</label>
-                            @ViewBag.Degree
-                        </th>
-                        <th>
-                            <label>FiedOfStudy</label>
-                            @ViewBag.FieldOfStudy
-                        </th>
-                        <th>
-                            <label>StartDate</label>
-                            @ViewBag.StartDate
-                        </th>
-                        <th>
-                            <label>EndDate</label>
-                            @ViewBag.EndDate
-                        </th>
-                        
-                       
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in ViewBag.FreeLancerEducations)
+                    @foreach (var item in ViewBag.FreeLancerExperiences)
                     {
-                        <tr>
-                         <td>
-                            @item.InstituteName
-                         </td>
-                            <td>
-                                @item.Degree
-                            </td>
-                            <td>
-                                @item.FieldOfStudy
-                            </td>
-                            <td>
-                                @item.StartDate
-                            </td>
-                       <td>
-                            @item.EndDate
-                         </td>
+                        <div class="d-flex justify-content-between">
+                            <div class="p"><span class="fw-bold">@item.CompanyName</span> @item.EmploymentType.EmploymentTypeName</div>
+                        </div>
 
-                        </tr>
+                        <div class="d-flex mb-3">
+                            <div class="p me-3">@Convert.ToDateTime(item.StartDate).ToString("dd/MM/yyyy")</div>
+                            <div class="p me-3">|</div>
+                            <div class="p">@Convert.ToDateTime(item.EndDate).ToString("dd/MM/yyyy")</div>
+                        </div>
                     }
 
- 
 
-    </tbody>
-</table>  
+
+                    <hr class="hr mt-4 mb-4" />
+
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="card-title">Education</h4>
+                    </div>
+
+                    @foreach (var item in ViewBag.FreeLancerEducations)
+                    {
+                        <div class="d-flex justify-content-between">
+                            <div class="p"><span class="fw-bold">@item.InstituteName</span> @item.Degree</div>
+                        </div>
+
+                        <div class="p">@item.FieldOfStudy</div>
+
+                        <div class="d-flex mb-3">
+                            <div class="p me-3">@Convert.ToDateTime(item.StartDate).ToString("dd/MM/yyyy")</div>
+                            <div class="p me-3">|</div>
+                            <div class="p">@Convert.ToDateTime(item.EndDate).ToString("dd/MM/yyyy")</div>
+                        </div>
+                    }
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <h3 class="Card Title"><span>@Model.ApplicationUser.FirstName</span>'s Projects</h3>
+                    </div>
+                    <div class="row gy-3">
+
+                        @foreach (var item in ViewBag.Projects)
+                        {
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <img class="card-img-top" src="@item.FileName" alt="Card image cap" style="aspect-ratio:2/1;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.ProjectName</h5>
+                                        <p class="card-text">@item.Description</p>
+                                        <a href="https://@item.ProjectWebsite" class="btn btn-primary w-100">Project's Website</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

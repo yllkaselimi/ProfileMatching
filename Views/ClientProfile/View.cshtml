@@ -8,8 +8,6 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Client Profile</h1>
-
     @if (TempData["SuccessfulApplication"] != null)
     {
         <script type="text/javascript">
@@ -28,146 +26,104 @@
         </script>
     }
 
-<table class="table">
-    <thead>
-        <tr>
-           
-            <th>
-                @Html.DisplayNameFor(model => model.Position)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompanyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CityId)
-            </th>
-
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                @Model.Position
-            </td>
-            <td>
-                @Model.CompanyName
-            </td>
-            <td>
-                @Model.Description
-            </td>
-            <td>
-                @Model.City.CityName
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="container mt-4 mb-4">
+    <div class="row">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3>@Model.ApplicationUser.FirstName @Model.ApplicationUser.LastName</h3>
+                    <h5 class="card-title">@Model.Position at <span class="fw-bold">@Model.CompanyName</span> | @Model.City.CityName</h5>
+                    <p class="card-text">@Model.Description</p>
+                    <a href="mailto:@Model.ApplicationUser.Email" class="btn btn-success w-100">Contact me</a>
+                </div>
+            </div>
+        </div>
 
 
-<table class="table">
-    <thead>
-        <tr>
 
-            <th>
-                <label>JobPostName</label>
-                @ViewBag.JobPostName
-            </th>
-            <th>
-                <label>Budget</label>
-                @ViewBag.JobPostBudget
-            </th>
-            <th>
-                <label>Length</label>
-                @ViewBag.JobLength
-            </th>
-            <th>
-                <label>JobPostDescription</label>
-                @ViewBag.JobPostDescription
-            </th>
-            <th>
-                <label>Deadline</label>
-                @ViewBag.JobApplicationDeadline
-            </th>
-            <th>
-                <label>Category</label>
-                @ViewBag.Category
-            </th>
-            <th>Client Name</th>
-            <th>
-                CompanyName
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in ViewBag.JobPosts) {
-        <tr>
-                <td>
-                    @item.JobPostName
-                </td>
-                <td>
-                    @item.JobPostBudget
-                </td>
-                <td>
-                    @item.JobLength
-                </td>
-                <td>
-                    @item.JobPostDescription
-                </td>
-                <td>
-                    @item.JobApplicationDeadline
-                </td>
-                <td>
-                    @item.Category.CategoryName
-                </td>
-                <td>
-                    @item.ApplicationUser.FirstName
-                    @item.ApplicationUser.LastName
-                </td>
-                <td>
-                    @item.CompanyName
-                </td>
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h3 class="Card Title"><span>@Model.ApplicationUser.FirstName</span>'s Job Posts</h3>
+                    </div>
 
-            @if(User.IsInRole("Freelancer")){
-                    @if (((List<int?>)ViewBag.AppliedJobs).Contains(item.JobPostId)) {
-                        <td>
-                         <form asp-controller="ApplicantsPerJobs" asp-action="UnApply" method="post" asp-route-id="@item.JobPostId">
-                             <button>UnApply</button>
-                         </form>
-                        </td>
-                    }
-                    else
-                    {
-                         <td>
-                         <form asp-controller="ApplicantsPerJobs" asp-action="ApplyForJob" method="post" asp-route-id="@item.JobPostId">
-                             <button>Apply</button>
-                         </form>
-                        </td>  
-                    }
+                    <div class="row gy-3">
+
+                        @foreach (var item in ViewBag.JobPosts)
+                        {
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
 
 
-                    @if (((List<int?>)ViewBag.SavedJobs).Contains(item.JobPostId))
-                    {
-                         <td>
-                        <form asp-controller="SavedJobs" asp-action="Unsave" method="post" asp-route-id="@item.JobPostId">
-                            <button>Unsave</button>
-                        </form>
-                        </td>
-                    }
-                    else
-                    {
-                         <td>
-                        <form asp-controller="SavedJobs" asp-action="SaveJob" method="post" asp-route-id="@item.JobPostId">
-                        <button>Save</button>
-                        </form>
-                        </td>
-                    }
+                                        <h5 class="card-title">@item.JobPostName</h5>
+                                        <h6 class="card-title">@item.Category.CategoryName</h6>
+                                        <p class="card-text">@item.JobPostDescription</p>
+
+                                        <hr class="hr" />
+
+                                        <div class="d-flex mb-3 justify-content-between">
+                                            <div class="p me-3">@Convert.ToDateTime(item.JobApplicationDeadline).ToString("dd/MM/yyyy")</div>
+                                            <div class="p me-3">-</div>
+                                            <div class="p">@Convert.ToDateTime(item.JobLength).ToString("dd/MM/yyyy")</div>
+                                        </div>
+
+                                        <hr class="hr" />
+
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <div class="p fw-bold">Budget</div>
+                                            <div class="p">@item.JobPostBudget.ToString("#,##0.00") €</div>
+                                        </div>
+
+                                        <hr class="hr" />
 
 
-            }
-            </tr>
-          
-            }
-        </tbody>
-    </table>
+                                        @if (User.IsInRole("Freelancer"))
+                                        {
+                                            @if (((List<int?>)ViewBag.AppliedJobs).Contains(item.JobPostId)) {
+
+                                                 <form asp-controller="ApplicantsPerJobs" asp-action="UnApply" method="post" asp-route-id="@item.JobPostId">
+                                                    <button class="btn btn-outline-primary btn-sm mb-1" style="width:100%;">UnApply</button>
+                                                 </form>
+
+                                            }
+                                            else
+                                            {
+
+                                                 <form asp-controller="ApplicantsPerJobs" asp-action="ApplyForJob" method="post" asp-route-id="@item.JobPostId">
+                                                    <button class="btn btn-primary btn-sm mb-1" style="width:100%;">Apply</button>
+                                                 </form>
+
+                                            }
+
+
+
+                                            @if (((List<int?>)ViewBag.SavedJobs).Contains(item.JobPostId))
+                                            {
+
+                                                    <form asp-controller="SavedJobs" asp-action="Unsave" method="post" asp-route-id="@item.JobPostId">
+                                                        <button class="btn btn-outline-primary btn-sm" style="width:100%;">Unsave</button>
+                                                    </form>
+
+                                            }
+                                            else
+                                            {
+
+                                                    <form asp-controller="SavedJobs" asp-action="SaveJob" method="post" asp-route-id="@item.JobPostId">
+                                                        <button class="btn btn-primary btn-sm" style="width:100%;">Save</button>
+                                                    </form>
+
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
