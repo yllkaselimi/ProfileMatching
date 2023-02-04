@@ -53,6 +53,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.City.CityName)
                 </td>
+                <td>
+                    <a asp-controller="ClientProfile" asp-action="View" asp-route-id="@item.ApplicationUser.Id">View Profile</a>
+                </td>
             </tr>
         }
     </tbody>

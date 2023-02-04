@@ -40,6 +40,7 @@ namespace ProfileMatching.Controllers
                 || f.ApplicationUser.LastName.ToLower().Contains(teksti.ToLower())
                 || f.City.CityName.ToLower().Contains(teksti.ToLower())
                 || f.Position.ToLower().Contains(teksti.ToLower())
+                || f.Description.ToLower().Contains(teksti.ToLower())
                 || f.CompanyName.ToLower().Contains(teksti.ToLower())); 
                 
 

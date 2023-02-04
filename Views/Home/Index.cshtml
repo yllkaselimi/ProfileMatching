@@ -381,6 +381,9 @@
                     <td>
                         @item.Overview
                     </td>
+                    <td>
+                        <a asp-controller="FreelancerProfile" asp-action="View" asp-route-id="@item.ApplicationUser.Id">View Profile</a>
+                    </td>
 
                 </tr>
             }
