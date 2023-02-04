@@ -1,8 +1,393 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (!(SignInManager.IsSignedIn(User)))
+{
+    <h1>Bohu log in vllaqko</h1>
+}
+
+@if (User.IsInRole("Freelancer")){
+    <h1>Job Posts</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <label>Slider ID</label>
+                    @ViewBag.SliderId
+                </th>
+                <th>
+                    <label>Slider Title</label>
+                    @ViewBag.SliderTitle
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Sliders)
+            {
+                <tr>
+                    <td>
+                        @item.SliderId
+                    </td>
+                    <td>
+                        @item.SliderTitle
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+
+        @if (TempData["SuccessfulApplication"] != null)
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                    alert("Application was successful!");
+                };
+            </script>
+        }
+
+        @if (TempData["SuccessfulSave"] != null)
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                    alert("Job saved successfully!");
+                };
+            </script>
+        }
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <label>Job Post</label>
+                    @ViewBag.JobPostName
+                </th>
+                <th>
+                    <label>Budgetlabel</label>
+                    @ViewBag.JobPostBudget
+                </th>
+                <th>
+                    <label>Length</label>
+                    @ViewBag.JobLength
+                </th>
+                <th>
+                    <label>Description</label>
+                    @ViewBag.JobPostDescription
+                </th>
+                <th>
+                    <label>Application Deadline</label>
+                    @ViewBag.ApplicationDeadline
+                </th>
+                <th>
+                    <label>Category</label>
+                    @ViewBag.Category
+                </th>
+                <th>
+                    <label>Client Name</label>
+                </th>
+                <th>
+                    <label>Company</label>
+                    @ViewBag.CompanyName
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.RecentJobPosts)
+            {
+                <tr>
+                    <td>
+                        @item.JobPostName
+                    </td>
+                    <td>
+                        @item.JobPostBudget
+                    </td>
+                    <td>
+                        @item.JobLength
+                    </td>
+                    <td>
+                        @item.JobPostDescription
+                    </td>
+                    <td>
+                        @item.JobApplicationDeadline
+                    </td>
+                    <td>
+                        @item.Category.CategoryName
+                    </td>
+                    <td>
+                        @item.ApplicationUser.FirstName
+                        @item.ApplicationUser.LastName
+
+                    </td>
+                    <td>
+                        @item.CompanyName
+                    </td>
+                    @if (((List<int?>)ViewBag.AppliedJobs).Contains(item.JobPostId))
+                    {
+                        <td>
+                            <form asp-controller="ApplicantsPerJobs" asp-action="UnApply" method="post" asp-route-id="@item.JobPostId">
+                                <button>UnApply</button>
+                            </form>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <form asp-controller="ApplicantsPerJobs" asp-action="ApplyForJob" method="post" asp-route-id="@item.JobPostId">
+                                <button>Apply</button>
+                            </form>
+                        </td>
+                    }
+
+
+                    @if (((List<int?>)ViewBag.SavedJobs).Contains(item.JobPostId))
+                    {
+                        <td>
+                            <form asp-controller="SavedJobs" asp-action="Unsave" method="post" asp-route-id="@item.JobPostId">
+                                <button>Unsave</button>
+                            </form>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <form asp-controller="SavedJobs" asp-action="SaveJob" method="post" asp-route-id="@item.JobPostId">
+                                <button>Save</button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+    <a asp-action="Index" asp-controller="JobPosts">View All Job Posts</a>
+
+
+    <h2>Suggested Job Posts</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <label>Job Post</label>
+                    @ViewBag.JobPostName
+                </th>
+                <th>
+                    <label>Budgetlabel</label>
+                    @ViewBag.JobPostBudget
+                </th>
+                <th>
+                    <label>Length</label>
+                    @ViewBag.JobLength
+                </th>
+                <th>
+                    <label>Description</label>
+                    @ViewBag.JobPostDescription
+                </th>
+                <th>
+                    <label>Application Deadline</label>
+                    @ViewBag.ApplicationDeadline
+                </th>
+                <th>
+                    <label>Category</label>
+                    @ViewBag.Category
+                </th>
+                <th>
+                    <label>Client Name</label>
+                </th>
+                <th>
+                    <label>Company</label>
+                    @ViewBag.CompanyName
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.MatchingJobPosts)
+            {
+                <tr>
+                    <td>
+                        @item.JobPostName
+                    </td>
+                    <td>
+                        @item.JobPostBudget
+                    </td>
+                    <td>
+                        @item.JobLength
+                    </td>
+                    <td>
+                        @item.JobPostDescription
+                    </td>
+                    <td>
+                        @item.JobApplicationDeadline
+                    </td>
+                    <td>
+                        @item.Category.CategoryName
+                    </td>
+                    <td>
+                        @item.ApplicationUser.FirstName
+                        @item.ApplicationUser.LastName
+
+                    </td>
+                    <td>
+                        @item.CompanyName
+                    </td>
+                    @if (((List<int?>)ViewBag.AppliedJobs).Contains(item.JobPostId))
+                    {
+                        <td>
+                            <form asp-controller="ApplicantsPerJobs" asp-action="UnApply" method="post" asp-route-id="@item.JobPostId">
+                                <button>UnApply</button>
+                            </form>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <form asp-controller="ApplicantsPerJobs" asp-action="ApplyForJob" method="post" asp-route-id="@item.JobPostId">
+                                <button>Apply</button>
+                            </form>
+                        </td>
+                    }
+
+
+                    @if (((List<int?>)ViewBag.SavedJobs).Contains(item.JobPostId))
+                    {
+                        <td>
+                            <form asp-controller="SavedJobs" asp-action="Unsave" method="post" asp-route-id="@item.JobPostId">
+                                <button>Unsave</button>
+                            </form>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <form asp-controller="SavedJobs" asp-action="SaveJob" method="post" asp-route-id="@item.JobPostId">
+                                <button>Save</button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Index" asp-controller="JobSuggestions">View All Suggested Job Posts</a>
+}
+
+@if (User.IsInRole("Client")){
+    <table class="table">
+    <thead>
+        <tr>
+            <th>
+                <label>Slider ID</label>
+                @ViewBag.SliderId
+            </th>
+            <th>
+                <label>Slider Title</label>
+                @ViewBag.SliderTitle
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.Sliders)
+        {
+            <tr>
+                <td>
+                    @item.SliderId
+                </td>
+                <td>
+                    @item.SliderTitle
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" asp-controller="JobPosts">Create a New Job Post</a>
+
+
+
+    <h1>Freelancers</h1>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Email
+                </th>
+                <th>
+                    First Name
+                </th>
+                <th>
+                    Last Name
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    City
+                </th>
+                <th>
+                    Hourly Rate
+                </th>
+                <th>
+                    Languages
+                </th>
+                <th>
+                    Overview
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Freelancers)
+            {
+                <tr>
+                    <td>
+                        @item.ApplicationUser.Email
+                    </td>
+                    <td>
+                        @item.ApplicationUser.FirstName
+                    </td>
+                    <td>
+                        @item.ApplicationUser.LastName
+                    </td>
+                    <td>
+                        @item.Category.CategoryName
+                    </td>
+                    <td>
+                        @item.City.CityName
+                    </td>
+                    <td>
+                        @item.HourlyRate
+                    </td>
+                    <td>
+                        @item.Languages
+                    </td>
+                    <td>
+                        @item.Overview
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <a asp-action="Index" asp-controller="Freelancers">View All Freelancers</a>
+
+}
