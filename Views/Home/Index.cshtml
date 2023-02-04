@@ -393,3 +393,19 @@
     <a asp-action="Index" asp-controller="Freelancers">View All Freelancers</a>
 
 }
+
+@if (User.IsInRole("Admin")){
+
+    <a asp-action="Index" asp-controller="Categories">Manage Categories</a>
+    <a asp-action="Index" asp-controller="Cities">Manage Cities</a>
+    <a asp-action="Index" asp-controller="EmploymentTypes">Manage Employment Types</a>
+
+    <a asp-action="Index" asp-controller="FreelancerDetails">Manage Freelancer Details</a>
+    <a asp-action="Index" asp-controller="FreelancerEducations">Manage Freelancer Educations</a>
+    <a asp-action="Index" asp-controller="FreelancerExperiences">Manage Freelancer Experiences</a>
+
+    <a asp-action="Index" asp-controller="ClientDetails">Manage Client Details</a>
+    <a asp-action="Index" asp-controller="JobPosts">Manage Job Posts</a>
+    <a asp-action="Index" asp-controller="ApplicantsPerJobs">Manage Job Applications</a>
+    
+}
