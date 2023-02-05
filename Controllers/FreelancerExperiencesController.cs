@@ -24,10 +24,25 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerExperiences
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
-            var dataContext = _context.FreelancerExperiences.Include(f => f.ApplicationUser).Include(f => f.EmploymentType);
-            return View(await dataContext.ToListAsync());
+            List<FreelancerExperience> freelancerExperiences = _context.FreelancerExperiences.Include(f => f.ApplicationUser).Include(f => f.EmploymentType).ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = freelancerExperiences.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = freelancerExperiences.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+            return View(data);
         }
 
         // GET: FreelancerExperiences/Details/5

@@ -17,7 +17,7 @@ namespace ProfileMatching.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
  
@@ -37,12 +37,22 @@ namespace ProfileMatching.Controllers
             var roli = RolesForUser[0];
             ViewData["Role"] = roli;
 
-            var matchingJobPosts = _context.JobPosts.Where(x => x.CategoryId == cat).Include(j => j.Category).Include(j => j.ApplicationUser).ToList();
-            /*meqe e kena jobpost t'lidht me categoryId, qikjo .include po i shtohet qe me i include
-              dmth data edhe prej tabeles category, n'rast te na me mujt me thirr mandej n'front emrin e kategorise
-              me qat categoryId
-            */
 
+            List<JobPost> jobPosts = _context.JobPosts.Where(x => x.CategoryId == cat).Include(j => j.Category).Include(j => j.ApplicationUser).ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = jobPosts.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = jobPosts.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
 
             //i bartim id te puneve qe useri has already applied for me ni viewdata
             var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
@@ -52,12 +62,12 @@ namespace ProfileMatching.Controllers
             var savedJobs = _context.SavedJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["SavedJobs"] = savedJobs;
 
-            if (matchingJobPosts == null)
+            if (jobPosts == null)
             {
                 return NotFound();
             }
 
-            return View(matchingJobPosts);
+            return View(data);
         }
     }
     }

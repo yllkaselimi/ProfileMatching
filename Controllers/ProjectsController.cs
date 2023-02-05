@@ -23,16 +23,33 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Projects
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
+            List<Project> projects = _context.Projects.Include(p => p.ApplicationUser).Include(p => p.Category).ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = projects.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = projects.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+            
+
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _context.Users.Where(x => x.Id == userId).First();
             var RolesForUser = await _userManager.GetRolesAsync(user);
             var roli = RolesForUser[0];
             ViewData["Role"] = roli;
 
-            var dataContext = _context.Projects.Include(p => p.ApplicationUser).Include(p => p.Category);
-            return View(await dataContext.ToListAsync());
+            return View(data);
         }
 
         // GET: Projects/Details/5

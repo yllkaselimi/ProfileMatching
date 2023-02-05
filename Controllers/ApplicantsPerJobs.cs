@@ -18,9 +18,25 @@ namespace ProfileMatching.Controllers
 
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
-            return View(await _context.ApplicantsPerJobs.ToListAsync());
+            List<ApplicantsPerJob> applicantsPerJobs = _context.ApplicantsPerJobs.ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = applicantsPerJobs.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = applicantsPerJobs.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+            return View(data);
         }
 
 

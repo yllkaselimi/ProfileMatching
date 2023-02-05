@@ -19,9 +19,25 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Cities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
-              return View(await _context.Cities.ToListAsync());
+            List<City> cities = _context.Cities.ToList();
+
+            const int pageSize = 4;
+            if(pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = cities.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = cities.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+            return View(data);
         }
 
         // GET: Cities/Details/5

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-
+using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
@@ -16,13 +15,28 @@ namespace ProfileMatching.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
             ViewData["Categories"] = _context.Categories.ToList();
             //^we only needed this per at butonin me select n'baze t'kategorise per me filtru freelancers
 
-            var dataContext = _context.ClientDetails.Include(f => f.ApplicationUser).Include(f => f.City);
-            return View(await dataContext.ToListAsync());
+            List<ClientDetail> clients = _context.ClientDetails.Include(f => f.ApplicationUser).Include(f => f.City).ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = clients.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = clients.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+            return View(data);
         }
 
 

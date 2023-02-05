@@ -24,10 +24,25 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: JobPosts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
             ViewData["Categories"] = _context.Categories.ToList();
-            var dataContext = _context.JobPosts.Include(j => j.Category).Include(j => j.ApplicationUser);
+
+            List<JobPost> jobPosts = _context.JobPosts.Include(j => j.Category).Include(j => j.ApplicationUser).ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = jobPosts.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = jobPosts.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
 
             //kodi qe po na qon rolin e loggedin user te viewbag n view
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -44,7 +59,9 @@ namespace ProfileMatching.Controllers
             var savedJobs = _context.SavedJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
             ViewData["SavedJobs"] = savedJobs;
 
-            return View(await dataContext.ToListAsync());
+
+
+            return View(data);
             //return View(await dataContext.OrderByDescending(j => j.JobPostBudget).ToListAsync());
         }
 
@@ -250,7 +267,7 @@ namespace ProfileMatching.Controllers
             return View(await result.ToListAsync());
         }
 
-        public async Task<IActionResult> FilterJobPost(int? id)
+        public async Task<IActionResult> FilterJobPost(int? id, int pg=1)
         {
             //kodi per me rujt rolin e logged in user me ni viewdata
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -264,6 +281,7 @@ namespace ProfileMatching.Controllers
             //po e marrim kategorine qe e kena select (dmth prej id qe e pranon metoda)
             var category = _context.Categories.Where(x => x.CategoryId == id).First();
             ViewData["FilteredCategoryName"] = category.CategoryName;
+            ViewData["FilteredCategoryId"] = category.CategoryId;
 
             //i bartim id te puneve qe useri has already applied for me ni viewdata
             var appliedJobs = _context.ApplicantsPerJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
@@ -274,15 +292,31 @@ namespace ProfileMatching.Controllers
             ViewData["SavedJobs"] = savedJobs;
 
             //i marrim punt me qat kategori
-            var jobpostvar = _context.JobPosts
+            List<JobPost> jobPosts = _context.JobPosts
                 .Include(f => f.Category)
-                .Where(f => f.Category.CategoryId == id);
+                .Where(f => f.Category.CategoryId == id).ToList();
 
-            if (jobpostvar == null)
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = jobPosts.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = jobPosts.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+
+            if (jobPosts == null)
             {
                 return NotFound();
             }
-            return View(await jobpostvar.ToListAsync());
+
+            return View(data);
         }
 
     }

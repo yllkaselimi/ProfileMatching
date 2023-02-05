@@ -23,10 +23,25 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: ClientDetails
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
-            var dataContext = _context.ClientDetails.Include(c => c.ApplicationUser).Include(c => c.City);
-            return View(await dataContext.ToListAsync());
+            List<ClientDetail> clientDetails = _context.ClientDetails.Include(c => c.ApplicationUser).Include(c => c.City).ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = clientDetails.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = clientDetails.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+            return View(data);
         }
 
         // GET: ClientDetails/Details/5

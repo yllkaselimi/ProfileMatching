@@ -19,9 +19,25 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Ratings
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
-              return View(await _context.Ratings.ToListAsync());
+            List<Rating> ratings = _context.Ratings.ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = ratings.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = ratings.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+            return View(data);
         }
 
         // GET: Ratings/Details/5
