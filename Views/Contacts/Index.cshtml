@@ -23,9 +23,14 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser)
-            </th>
+        
+                <th>
+                    @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ApplicationUser.LastName)
+                </th>
             <th>
                 @Html.DisplayNameFor(model => model.Message)
             </th>
@@ -35,8 +40,11 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+         <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+            </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+                @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Message)
