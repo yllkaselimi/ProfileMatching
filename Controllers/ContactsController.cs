@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,15 +14,19 @@ namespace ProfileMatching.Controllers
     public class ContactsController : Controller
     {
         private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public ContactsController(DataContext context)
+        public ContactsController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Contacts
         public async Task<IActionResult> Index(int pg=1)
         {
+
+
             List<Contact> contacts = _context.Contacts.Include(c => c.ApplicationUser).ToList();
 
             const int pageSize = 4;
@@ -37,6 +42,9 @@ namespace ProfileMatching.Controllers
 
             var data = contacts.Skip(recSkip).Take(pager.PageSize).ToList();
             ViewData["Pager"] = pager;
+
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
 
             return View(data);
         }
@@ -63,6 +71,9 @@ namespace ProfileMatching.Controllers
         // GET: Contacts/Create
         public IActionResult Create()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.Where(x => x.Id == userId).First();
+
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id");
             return View();
         }
@@ -74,14 +85,33 @@ namespace ProfileMatching.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ContactId,UserId,Message")] Contact contact)
         {
-            if (ModelState.IsValid)
-            {
+        
                 _context.Add(contact);
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", contact.UserId);
-            return View(contact);
+
+                var userId = _userManager.GetUserId(HttpContext.User);
+                var user = _context.Users.Where(x => x.Id == userId).First();
+                var RolesForUser = await _userManager.GetRolesAsync(user);
+                var roli = RolesForUser[0];
+                ViewData["Role"] = roli;
+
+           
+                if (roli == "Freelancer")
+                {
+                return RedirectToAction("Index", "freelancerprofile");
+                }
+
+                if (roli == "Client")
+                {
+                return RedirectToAction("Index", "clientprofile");
+                }
+
+
+            return RedirectToAction(nameof(Index));
+
+                ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", contact.UserId);
+                return View(contact);
         }
 
         // GET: Contacts/Edit/5
@@ -113,8 +143,8 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+          //  {
                 try
                 {
                     _context.Update(contact);
@@ -132,7 +162,7 @@ namespace ProfileMatching.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+           // }
             ViewData["UserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", contact.UserId);
             return View(contact);
         }
