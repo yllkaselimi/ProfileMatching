@@ -20,7 +20,7 @@ namespace ProfileMatching.Controllers
 
         public async Task<IActionResult> Index(int pg=1)
         {
-            List<ApplicantsPerJob> applicantsPerJobs = _context.ApplicantsPerJobs.ToList();
+            List<ApplicantsPerJob> applicantsPerJobs = _context.ApplicantsPerJobs.Include(j => j.JobPost).Include(j => j.ApplicationUser).ToList();
 
             const int pageSize = 4;
             if (pg < 1)
