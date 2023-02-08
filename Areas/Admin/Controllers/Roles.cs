@@ -1,25 +1,28 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProfileMatching.Controllers;
 
 namespace ProfileMatching.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Route("admin/[controller]")]
     //[Authorize(Roles = "Admin")]
-    public class AdminHomeController : Controller
+    public class Roles : Controller
     {
-
+        private readonly DataContext _context;
         private readonly RoleManager<IdentityRole> rolemanager;
-        public AdminHomeController(RoleManager<IdentityRole> _roleManager)
+        public Roles(DataContext context, RoleManager<IdentityRole> _roleManager)
         {
+            _context = context;
             rolemanager = _roleManager;
         }
 
-        //public IActionResult Index()
-        //{
-        //   return View();
-        //}
+        public IActionResult Index()
+        {
+           var roles = rolemanager.Roles.ToList();
+           return View(roles);
+
+        }
 
         //Metoda CreateRole na kthen View ku kemi formen e cila merr emrin e rolit qe deshirojme ta krijojme
         
@@ -27,6 +30,7 @@ namespace ProfileMatching.Areas.Admin.Controllers
         {
             return View();
         }
+
 
         //Metoda CreateRole ne method post na merr si parameter emrin e rolit dhe kerkon qe nese ky rol me kete
         //emer nuk egziston e krijon ne tabele
@@ -42,6 +46,7 @@ namespace ProfileMatching.Areas.Admin.Controllers
 
             return View();
         }
+
     }
 
 

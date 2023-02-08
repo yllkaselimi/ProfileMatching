@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@inject UserManager<IdentityUser> UserManager
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Role Id
+            </th>
+            <th>
+                Role Name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+           
+
+        </tr>
+}
+    </tbody>
+</table>
