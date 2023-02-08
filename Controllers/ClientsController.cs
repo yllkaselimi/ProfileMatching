@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class ClientsController : Controller
     {
 

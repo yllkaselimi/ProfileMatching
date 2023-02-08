@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class SavedJobs : Controller
     {
         private readonly DataContext _context;
@@ -17,7 +19,7 @@ namespace ProfileMatching.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int pg=1)
         {
             List<SavedJob> savedJobs = _context.SavedJobs.ToList();
@@ -42,6 +44,7 @@ namespace ProfileMatching.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Freelancer")]
         public async Task<IActionResult> SaveJob(int id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -68,6 +71,7 @@ namespace ProfileMatching.Controllers
         }
 
         //kjo e merr id te logged in user edhe jobpostId, aplikohet veq kur freelancer e bon vet unsave 
+        [Authorize(Roles = "Freelancer")]
         public async Task<IActionResult> Unsave(int? id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -84,6 +88,7 @@ namespace ProfileMatching.Controllers
 
 
         //kto e perdor veq admini, e merr id savedjobID
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSave(int? id)
         {
             if (_context.SavedJobs == null)
@@ -103,6 +108,7 @@ namespace ProfileMatching.Controllers
 
 
 
+        [Authorize(Roles = "Freelancer")]
         public async Task<IActionResult> MySavedJobs()
         {
             var userId = _userManager.GetUserId(HttpContext.User);

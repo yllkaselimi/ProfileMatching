@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class FreeLancerProfile : Controller
     {
 
@@ -17,6 +19,8 @@ namespace ProfileMatching.Controllers
             _context = context;
             _userManager = userManager;
         }
+
+        [Authorize(Roles = "Admin, Freelancer")]
         public IActionResult Index()
         {
             var userId = _userManager.GetUserId(HttpContext.User);

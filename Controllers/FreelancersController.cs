@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProfileMatching.Models;
 
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class FreelancersController : Controller
     {
 
@@ -44,6 +46,7 @@ namespace ProfileMatching.Controllers
 
 
         //GET SUGGESTED FREELANCERS FOR A JOB BASED ON THE JOB'S CATEGORY
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Suggested(int? id)
         {
             ViewData["Categories"] = _context.Categories.ToList();

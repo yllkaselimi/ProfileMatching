@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class ClientDetailsController : Controller
     {
         private readonly DataContext _context;
@@ -23,6 +25,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: ClientDetails
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int pg=1)
         {
             List<ClientDetail> clientDetails = _context.ClientDetails.Include(c => c.ApplicationUser).Include(c => c.City).ToList();
@@ -45,6 +48,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: ClientDetails/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.ClientDetails == null)
@@ -67,6 +71,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: ClientDetails/Create
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Create()
         {
             //e marrim id t klientit logged in
@@ -100,6 +105,8 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Create([Bind("ClientDetailsId,UserId,Position,CompanyName,Description,CityId")] ClientDetail clientDetail)
         {
             _context.Add(clientDetail);
@@ -136,6 +143,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: ClientDetails/Edit/5
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Edit(int? id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -164,6 +172,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Edit(int id, [Bind("ClientDetailsId,UserId,Position,CompanyName,Description,CityId")] ClientDetail clientDetail)
         {
             if (id != clientDetail.ClientDetailsId)
@@ -218,6 +227,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: ClientDetails/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.ClientDetails == null)
@@ -240,6 +250,7 @@ namespace ProfileMatching.Controllers
         // POST: ClientDetails/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.ClientDetails == null)

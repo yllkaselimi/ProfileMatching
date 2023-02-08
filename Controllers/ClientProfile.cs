@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace ProfileMatching.Controllers
 {
+
+    [Authorize]
     public class ClientProfile : Controller
     {
 
@@ -16,6 +19,8 @@ namespace ProfileMatching.Controllers
             _context = context;
             _userManager = userManager;
         }
+
+        [Authorize(Roles = "Admin, Client")]
         public IActionResult Index()
         {
             //id t userit qe osht logged in

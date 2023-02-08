@@ -3,9 +3,11 @@ using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using ProfileMatching.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class JobSuggestions : Controller
     {
         private readonly DataContext _context;
@@ -17,6 +19,7 @@ namespace ProfileMatching.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles = "Freelancers")]
         public async Task<IActionResult> Index(int pg=1)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);

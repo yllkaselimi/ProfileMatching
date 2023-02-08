@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private readonly DataContext _context;
@@ -23,6 +25,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Projects
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int pg=1)
         {
             List<Project> projects = _context.Projects.Include(p => p.ApplicationUser).Include(p => p.Category).ToList();
@@ -53,6 +56,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Projects/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -73,6 +77,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> CreateAsync()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -92,6 +97,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Create([Bind("ProjectId,ProjectName,FileName,Description,ProjectWebsite,CategoryId,UserId")] Project project)
         {
 
@@ -128,6 +134,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Edit(int? id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -156,6 +163,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Edit(int id, [Bind("ProjectId,ProjectName,FileName,Description,ProjectWebsite,CategoryId,UserId")] Project project)
         {
             if (id != project.ProjectId)
@@ -206,6 +214,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Projects/Delete/5
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -228,6 +237,7 @@ namespace ProfileMatching.Controllers
         // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Projects == null)

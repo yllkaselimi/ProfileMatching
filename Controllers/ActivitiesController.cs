@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProfileMatching.Models;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ActivitiesController : Controller
     {
         private readonly DataContext _context;
@@ -24,7 +26,7 @@ namespace ProfileMatching.Controllers
         {
             List<Activity> activities = _context.Activities.Include(a => a.ApplicationUser).ToList();
 
-            const int pageSize = 4;
+            const int pageSize = 10;
             if (pg < 1)
             {
                 pg = 1;

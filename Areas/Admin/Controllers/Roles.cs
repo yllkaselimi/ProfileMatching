@@ -6,7 +6,7 @@ using ProfileMatching.Controllers;
 namespace ProfileMatching.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class Roles : Controller
     {
         private readonly DataContext _context;

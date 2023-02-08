@@ -122,9 +122,9 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                 {
                     //uncomment this kur don ni user me bo admin, veq qite te userId Id e userit
                     /*
-                    var userId = "4f6e15ca-7064-4e64-a70f-4d9dbda8443f";
+                    var userId = "025c5af0-daa3-46ba-a808-da23a5ce9faf";
                     var user = _context.Users.Where(x => x.Id == userId).First();
-                    await _userManager.RemoveFromRoleAsync(user, "User");
+                    await _userManager.RemoveFromRoleAsync(user, "Freelancer");
                     await _userManager.AddToRoleAsync(user, "Admin");*/
 
                     _logger.LogInformation("User logged in.");

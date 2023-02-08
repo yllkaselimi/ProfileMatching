@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class FreelancerEducationsController : Controller
     {
         private readonly DataContext _context;
@@ -24,6 +26,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerEducations
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int pg=1)
         {
             List<FreelancerEducation> freelancerEducations = _context.FreelancerEducations.Include(f => f.ApplicationUser).ToList();
@@ -47,6 +50,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerEducations/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.FreelancerEducations == null)
@@ -66,6 +70,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerEducations/Create
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> CreateAsync()
         {
             //kodi qe po na qon rolin e loggedin user te viewbag n view
@@ -84,6 +89,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Create([Bind("FreelancerEducationid,InstituteName,Degree,FieldOfStudy,StartDate,EndDate,UserId")] FreelancerEducation freelancerEducation)
         {
 
@@ -116,6 +122,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerEducations/Edit/5
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Edit(int? id)
         {
             //kodi qe po na qon rolin e loggedin user te viewbag n view
@@ -144,6 +151,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Edit(int id, [Bind("FreelancerEducationid,InstituteName,Degree,FieldOfStudy,StartDate,EndDate,UserId")] FreelancerEducation freelancerEducation)
         {
             if (id != freelancerEducation.FreelancerEducationid)
@@ -196,6 +204,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerEducations/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.FreelancerEducations == null)
@@ -217,6 +226,7 @@ namespace ProfileMatching.Controllers
         // POST: FreelancerEducations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.FreelancerEducations == null)

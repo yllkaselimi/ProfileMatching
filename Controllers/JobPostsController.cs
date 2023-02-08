@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class JobPostsController : Controller
     {
         private readonly DataContext _context;
@@ -67,6 +69,7 @@ namespace ProfileMatching.Controllers
 
 
         // GET: JobPosts/Create
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> CreateAsync()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -85,6 +88,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Create([Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId,UserId")] JobPost jobPost)
         {
             jobPost.CompanyName = _context.ClientDetails.FirstOrDefault(x => x.UserId == jobPost.UserId).CompanyName;
@@ -119,6 +123,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: JobPosts/Edit/5
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Edit(int? id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -147,6 +152,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Edit(int id, [Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId, UserId")] JobPost jobPost)
         {
             if (id != jobPost.JobPostId)
@@ -200,6 +206,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: JobPosts/Delete/5
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.JobPosts == null)
@@ -221,6 +228,7 @@ namespace ProfileMatching.Controllers
         // POST: JobPosts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.JobPosts == null)

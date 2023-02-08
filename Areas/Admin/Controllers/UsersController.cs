@@ -5,11 +5,12 @@ using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProfileMatching.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    //[Route("admin/[controller]/[action=Index]")]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly DataContext _context;

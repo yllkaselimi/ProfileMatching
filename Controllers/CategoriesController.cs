@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ProfileMatching.Areas.Admin.Controllers;
 using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         private readonly DataContext _context;
@@ -26,7 +29,7 @@ namespace ProfileMatching.Controllers
         {
             List<Category> categories = _context.Categories.ToList();
 
-            const int pageSize = 4;
+            const int pageSize = 8;
             if (pg < 1)
             {
                 pg = 1;

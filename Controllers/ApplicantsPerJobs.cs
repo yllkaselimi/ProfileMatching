@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProfileMatching.Areas.Admin.Controllers;
 using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class ApplicantsPerJobs : Controller
     {
         private readonly DataContext _context;
@@ -17,7 +20,7 @@ namespace ProfileMatching.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int pg=1)
         {
             List<ApplicantsPerJob> applicantsPerJobs = _context.ApplicantsPerJobs.Include(j => j.JobPost).Include(j => j.ApplicationUser).ToList();
@@ -42,6 +45,7 @@ namespace ProfileMatching.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Freelancer")]
         public async Task<IActionResult> ApplyForJob(int id)
         {
             //merr id te logged in user
@@ -68,6 +72,7 @@ namespace ProfileMatching.Controllers
             return Redirect(HttpContext.Request.Headers["Referer"]); 
         }
 
+        [Authorize(Roles = "Freelancer")]
         public async Task<IActionResult> UnApply(int? id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -83,7 +88,7 @@ namespace ProfileMatching.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> ShowJobApplicants(int? id)
         {
             if (id == null || _context.ApplicantsPerJobs == null)
@@ -104,7 +109,7 @@ namespace ProfileMatching.Controllers
             return View(applicants);
         }
 
-
+        [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (_context.ApplicantsPerJobs == null)
@@ -125,6 +130,7 @@ namespace ProfileMatching.Controllers
         }
 
 
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> MyJobApplications()
         {
             //kodi qe po na qon rolin e loggedin user te viewbag n view

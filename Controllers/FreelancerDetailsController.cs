@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
 {
+    [Authorize]
     public class FreelancerDetailsController : Controller
     {
         private readonly DataContext _context;
@@ -23,6 +25,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerDetails
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int pg=1)
         {
             List<FreelancerDetails> freelancerDetails = _context.FreelancerDetails.Include(f => f.ApplicationUser).Include(f => f.Category).Include(f => f.City).ToList();
@@ -46,6 +49,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerDetails/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.FreelancerDetails == null)
@@ -67,6 +71,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerDetails/Create
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Create()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -101,6 +106,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Create([Bind("FreelancerDetailsId,CategoryId,CityId,HourlyRate,Languages,Overview,UserId")] FreelancerDetails freelancerDetails)
         {
 
@@ -139,6 +145,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerDetails/Edit/5
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Edit(int? id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -168,6 +175,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Freelancer")]
         public async Task<IActionResult> Edit(int id, [Bind("FreelancerDetailsId,CategoryId,CityId,HourlyRate,Languages,Overview,UserId")] FreelancerDetails freelancerDetails)
         {
             if (id != freelancerDetails.FreelancerDetailsId)
@@ -224,6 +232,7 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: FreelancerDetails/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.FreelancerDetails == null)
@@ -247,6 +256,7 @@ namespace ProfileMatching.Controllers
         // POST: FreelancerDetails/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.FreelancerDetails == null)
