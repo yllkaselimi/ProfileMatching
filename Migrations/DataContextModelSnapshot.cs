@@ -252,7 +252,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Activities");
+                    b.ToTable("Activities", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.ApplicantsPerJob", b =>
@@ -276,7 +276,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ApplicantsPerJobs");
+                    b.ToTable("ApplicantsPerJobs", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.Category", b =>
@@ -293,7 +293,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.City", b =>
@@ -310,7 +310,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasKey("CityId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.ClientDetail", b =>
@@ -346,7 +346,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ClientDetails");
+                    b.ToTable("ClientDetails", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.Contact", b =>
@@ -368,7 +368,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Contacts");
+                    b.ToTable("Contacts", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.EmploymentType", b =>
@@ -385,7 +385,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasKey("EmploymentTypeId");
 
-                    b.ToTable("EmploymentTypes");
+                    b.ToTable("EmploymentTypes", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.FreelancerDetails", b =>
@@ -427,7 +427,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FreelancerDetails");
+                    b.ToTable("FreelancerDetails", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.FreelancerEducation", b =>
@@ -463,7 +463,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FreelancerEducations");
+                    b.ToTable("FreelancerEducations", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.FreelancerExperience", b =>
@@ -496,7 +496,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FreelancerExperiences");
+                    b.ToTable("FreelancerExperiences", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.JobPost", b =>
@@ -540,7 +540,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("JobPosts");
+                    b.ToTable("JobPosts", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.Project", b =>
@@ -580,7 +580,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.Rating", b =>
@@ -611,7 +611,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Ratings", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.SavedJob", b =>
@@ -635,7 +635,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SavedJobs");
+                    b.ToTable("SavedJobs", (string)null);
                 });
 
             modelBuilder.Entity("ProfileMatching.Models.Slider", b =>
@@ -656,7 +656,7 @@ namespace ProfileMatching.Migrations
 
                     b.HasKey("SliderId");
 
-                    b.ToTable("Sliders");
+                    b.ToTable("Sliders", (string)null);
                 });
 
             modelBuilder.Entity("ASP.NETCoreIdentityCustom.Areas.Identity.Data.ApplicationUser", b =>

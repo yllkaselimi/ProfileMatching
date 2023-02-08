@@ -20,10 +20,25 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: Activities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg=1)
         {
-            var dataContext = _context.Activities.Include(a => a.ApplicationUser);
-            return View(await dataContext.ToListAsync());
+            List<Activity> activities = _context.Activities.Include(a => a.ApplicationUser).ToList();
+
+            const int pageSize = 4;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+
+            int recsCount = activities.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = activities.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewData["Pager"] = pager;
+
+            return View(data);
         }
 
         // GET: Activities/Details/5
