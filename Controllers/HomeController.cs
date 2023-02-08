@@ -29,7 +29,7 @@ namespace ProfileMatching.Controllers
                 var user = _context.Users.Where(x => x.Id == userId).First();
 
                 var allJobPosts = _context.JobPosts.Include(j => j.Category).Include(j => j.ApplicationUser);
-                ViewData["RecentJobPosts"] = allJobPosts.OrderByDescending(j => j.JobPostId).Take(3);
+                ViewData["RecentJobPosts"] = allJobPosts.OrderByDescending(j => j.JobPostId).Take(4);
 
                 //nese ski freelancer details, niher t shtin me i create
                 if (User.IsInRole("Freelancer")){
@@ -41,7 +41,7 @@ namespace ProfileMatching.Controllers
                     }
 
                     var userCategory = _context.FreelancerDetails.FirstOrDefault(x => x.UserId == userId).CategoryId;
-                    var matchingJobPosts = allJobPosts.Where(x => x.CategoryId == userCategory).OrderByDescending(j => j.JobPostId).Take(3);
+                    var matchingJobPosts = allJobPosts.Where(x => x.CategoryId == userCategory).OrderByDescending(j => j.JobPostId).Take(4);
                     ViewData["MatchingJobPosts"] = matchingJobPosts;
                 }
 
@@ -65,7 +65,7 @@ namespace ProfileMatching.Controllers
                 var savedJobs = _context.SavedJobs.Where(x => x.UserId == userId).Select(x => x.JobPostId).ToList();
                 ViewData["SavedJobs"] = savedJobs;
 
-                ViewData["Freelancers"] = _context.FreelancerDetails.Include(f => f.ApplicationUser).Include(f => f.Category).Include(f => f.City).OrderByDescending(j => j.FreelancerDetailsId).Take(3);
+                ViewData["Freelancers"] = _context.FreelancerDetails.Include(f => f.ApplicationUser).Include(f => f.Category).Include(f => f.City).OrderByDescending(j => j.FreelancerDetailsId).Take(4);
 
                 var slider = _context.Sliders.ToList();
                 ViewData["Sliders"] = slider;

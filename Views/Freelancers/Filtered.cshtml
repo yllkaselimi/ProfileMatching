@@ -42,70 +42,47 @@
 }
 else
 {
-    <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUser.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category.CategoryName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City.CityName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HourlyRate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Languages)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Overview)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City.CityName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HourlyRate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Languages)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Overview)
-            </td>
-            <td>
-                <a asp-controller="FreelancerProfile" asp-action="View" asp-route-id="@item.ApplicationUser.Id">View Profile</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <div class="card my-3">
+            <div class="card-body">
+                <div class="row gy-3">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)</h5>
+                                    <h6 class="card-title">@Html.DisplayFor(modelItem => item.Category.CategoryName)</h6>
+                                    <p class="card-text" id="FreelancerDescriptionCss">@Html.DisplayFor(modelItem => item.Overview)</p>
+
+                                    <hr class="hr" />
+
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <div class="p fw-bold">Hourly Rate</div>
+                                        <div class="p">@Html.DisplayFor(modelItem => item.HourlyRate) €</div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <div class="p fw-bold">Languages</div>
+                                        <div class="p">@Html.DisplayFor(modelItem => item.Languages)</div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <div class="p fw-bold">City</div>
+                                        <div class="p">@Html.DisplayFor(modelItem => item.City.CityName)</div>
+                                    </div>
+
+                                    <hr class="hr" />
+
+                                    <a asp-controller="FreelancerProfile" asp-action="View" asp-route-id="@item.ApplicationUser.Id" class="btn btn-primary btn-sm mb-1 w-100">View Profile</a>
+                                    <a href="mailto:@Html.DisplayFor(modelItem => item.ApplicationUser.Email)" class="btn btn-success btn-sm w-100">Contact</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
 <div class="container">
     @if(pager.TotalPages > 0)
     {
