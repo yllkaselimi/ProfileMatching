@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ProfileMatching.Models.Activity>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ActivityDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ActivityDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUser)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActivityDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActivityDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)
+                @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ActivityID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ActivityID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

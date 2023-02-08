@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,12 +13,14 @@ namespace ProfileMatching.Controllers
     public class CitiesController : Controller
     {
         private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public CitiesController(DataContext context)
+        public CitiesController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
-
+        
         // GET: Cities
         public async Task<IActionResult> Index(int pg=1)
         {
@@ -74,8 +77,17 @@ namespace ProfileMatching.Controllers
            // if (ModelState.IsValid)
            // {
                 _context.Add(city);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"City '{city.CityName}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
            // }
             return View(city);
         }
@@ -112,8 +124,16 @@ namespace ProfileMatching.Controllers
           //  {
                 try
                 {
+                    var activityLog = new Activity
+                    {
+                        UserId = _userManager.GetUserId(HttpContext.User),
+                        ActivityDescription = $"City '{city.CityName}' was edited",
+                        ActivityDate = DateTime.Now
+                    };
+                    _context.Activities.Add(activityLog);
                     _context.Update(city);
-                    await _context.SaveChangesAsync();
+
+                await _context.SaveChangesAsync();
                }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -163,7 +183,15 @@ namespace ProfileMatching.Controllers
             {
                 _context.Cities.Remove(city);
             }
-            
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"City '{city.CityName}' was deleted",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

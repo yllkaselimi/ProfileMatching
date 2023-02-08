@@ -26,6 +26,7 @@ namespace ProfileMatching.Controllers
         public DbSet<ClientDetail> ClientDetails { get; set; }
         public DbSet<SavedJob> SavedJobs { get; set; }
         public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
 
 
