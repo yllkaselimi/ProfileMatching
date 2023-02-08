@@ -91,9 +91,10 @@
                                 <a class="nav-link" href="/clients"><i class="bi bi-people-fill me-2"></i>Clients</a>
                             </li>
                         }
+                        @if (User.IsInRole("Client") || User.IsInRole("Freelancer"))
                         <li class="nav-item rounded">
-                  <a class="nav-link" href="/contacts/create"><i class="bi bi-telephone-fill me-2"></i>Contact</a>
-                </li>
+                          <a class="nav-link" href="/contacts/create"><i class="bi bi-telephone-fill me-2"></i>Contact</a>
+                        </li>
                 @*<li class="nav-item dropdown rounded">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill me-2"></i>Profile</a>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
