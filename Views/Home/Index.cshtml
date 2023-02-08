@@ -6,44 +6,64 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
+<div class="container">
 @if (!(SignInManager.IsSignedIn(User)))
 {
-    <h1>Bohu log in vllaqko</h1>
-}
+        <h1>Bohu log in vllaqko</h1>
+    }
+    else
+    {
+        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                @{
+                    int counter = 0;
+                }
+
+                @foreach (var item in ViewBag.Sliders)
+                {
+                    counter++;
+
+                    if (counter == 1)
+                    {
+                        <div class="carousel-item active">
+                            <img src="@item.SliderFilename" class="d-block w-100 h-25" alt="...">
+                            <div class="carousel-caption d-none d-md-block">
+                            <h5>@item.SliderTitle</h5>
+                        </div>
+                    </div>
+                    }
+                    else{
+                            <div class="carousel-item">
+                                <img src="@item.SliderFilename" class="d-block w-100 h-25" alt="...">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>@item.SliderTitle</h5>
+                                </div>
+                            </div>
+                    }
+
+                    
+                }
+
+
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    }
 
 @if (User.IsInRole("Freelancer")){
     <h1>Job Posts</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    <label>Slider ID</label>
-                    @ViewBag.SliderId
-                </th>
-                <th>
-                    <label>Slider Title</label>
-                    @ViewBag.SliderTitle
-                </th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in ViewBag.Sliders)
-            {
-                <tr>
-                    <td>
-                        @item.SliderId
-                    </td>
-                    <td>
-                        @item.SliderTitle
-                    </td>
-                </tr>
-
-            }
-        </tbody>
-    </table>
 
 
         @if (TempData["SuccessfulApplication"] != null)
@@ -285,112 +305,54 @@
 }
 
 @if (User.IsInRole("Client")){
-    <table class="table">
-    <thead>
-        <tr>
-            <th>
-                <label>Slider ID</label>
-                @ViewBag.SliderId
-            </th>
-            <th>
-                <label>Slider Title</label>
-                @ViewBag.SliderTitle
-            </th>
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in ViewBag.Sliders)
-        {
-            <tr>
-                <td>
-                    @item.SliderId
-                </td>
-                <td>
-                    @item.SliderTitle
-                </td>
-            </tr>
+        <a asp-action="Create" asp-controller="JobPosts" class="btn btn-outline-primary w-100 my-4">Create a New Job Post</a>
+        <div class="d-flex mb-3 justify-content-between align-items-center mb-2">
+            <h1>Freelancers</h1>
+            <a asp-action="Index" asp-controller="Freelancers" class="btn btn-primary">View All Freelancers</a>
+        </div>
 
-        }
-    </tbody>
-</table>
+        <div class="card">
+            <div class="card-body">
+                <div class="row gy-3">
+                    @foreach (var item in ViewBag.Freelancers)
+                    {
+                    <div class="col-md-3">
+                        <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.ApplicationUser.FirstName @item.ApplicationUser.LastName</h5>
+                                    <h6 class="card-title">@item.Category.CategoryName</h6>
+                                    <p class="card-text" id="FreelancerDescriptionCss">@item.Overview</p>
 
-<a asp-action="Create" asp-controller="JobPosts">Create a New Job Post</a>
+                                    <hr class="hr" />
 
+                                    <div class="d-flex justify-content-between mb-2">
+                                         <div class="p fw-bold">Hourly Rate</div>
+                                        <div class="p">@item.HourlyRate €</div>
+                                    </div>
 
+                                    <div class="d-flex justify-content-between mb-2">
+                                         <div class="p fw-bold">Languages</div>
+                                         <div class="p">@item.Languages</div>
+                                    </div>
 
-    <h1>Freelancers</h1>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <div class="p fw-bold">City</div>
+                                        <div class="p">@item.City.CityName</div>
+                                    </div>
 
+                                    <hr class="hr" />
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Email
-                </th>
-                <th>
-                    First Name
-                </th>
-                <th>
-                    Last Name
-                </th>
-                <th>
-                    Category
-                </th>
-                <th>
-                    City
-                </th>
-                <th>
-                    Hourly Rate
-                </th>
-                <th>
-                    Languages
-                </th>
-                <th>
-                    Overview
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in ViewBag.Freelancers)
-            {
-                <tr>
-                    <td>
-                        @item.ApplicationUser.Email
-                    </td>
-                    <td>
-                        @item.ApplicationUser.FirstName
-                    </td>
-                    <td>
-                        @item.ApplicationUser.LastName
-                    </td>
-                    <td>
-                        @item.Category.CategoryName
-                    </td>
-                    <td>
-                        @item.City.CityName
-                    </td>
-                    <td>
-                        @item.HourlyRate
-                    </td>
-                    <td>
-                        @item.Languages
-                    </td>
-                    <td>
-                        @item.Overview
-                    </td>
-                    <td>
-                        <a asp-controller="FreelancerProfile" asp-action="View" asp-route-id="@item.ApplicationUser.Id">View Profile</a>
-                    </td>
+                                    <a asp-controller="FreelancerProfile" asp-action="View" asp-route-id="@item.ApplicationUser.Id" class="btn btn-primary btn-sm mb-1 w-100">View Profile</a>
+                                    <a href="mailto:@item.ApplicationUser.Email" class="btn btn-success btn-sm w-100">Contact</a>
+                                </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
 
-                </tr>
-            }
-        </tbody>
-    </table>
-
-
-    <a asp-action="Index" asp-controller="Freelancers">View All Freelancers</a>
 
 }
 
@@ -409,3 +371,4 @@
     <a asp-action="Index" asp-controller="ApplicantsPerJobs">Manage Job Applications</a>
     
 }
+</div>
