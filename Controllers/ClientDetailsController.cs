@@ -103,6 +103,15 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Create([Bind("ClientDetailsId,UserId,Position,CompanyName,Description,CityId")] ClientDetail clientDetail)
         {
             _context.Add(clientDetail);
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"Client Details '{clientDetail.ClientDetailsId}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -165,7 +174,16 @@ namespace ProfileMatching.Controllers
             try
             {
                 _context.Update(clientDetail);
-                 await _context.SaveChangesAsync();
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Client Details '{clientDetail.ClientDetailsId}' was edited",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -232,6 +250,14 @@ namespace ProfileMatching.Controllers
             if (clientDetail != null)
             {
                 _context.ClientDetails.Remove(clientDetail);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Client Details '{clientDetail.ClientDetailsId}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
             }
             
             await _context.SaveChangesAsync();

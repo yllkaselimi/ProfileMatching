@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ProfileMatching.Migrations;
 using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
@@ -26,7 +27,7 @@ namespace ProfileMatching.Controllers
         // GET: FreelancerExperiences
         public async Task<IActionResult> Index(int pg=1)
         {
-            List<FreelancerExperience> freelancerExperiences = _context.FreelancerExperiences.Include(f => f.ApplicationUser).Include(f => f.EmploymentType).ToList();
+            List<Models.FreelancerExperience> freelancerExperiences = _context.FreelancerExperiences.Include(f => f.ApplicationUser).Include(f => f.EmploymentType).ToList();
 
             const int pageSize = 4;
             if (pg < 1)
@@ -85,10 +86,19 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FreelancerExperienceID,UserId,EmploymentTypeId,CompanyName,StartDate,EndDate")] FreelancerExperience freelancerExperience)
+        public async Task<IActionResult> Create([Bind("FreelancerExperienceID,UserId,EmploymentTypeId,CompanyName,StartDate,EndDate")] Models.FreelancerExperience freelancerExperience)
         {
 
             _context.Add(freelancerExperience);
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"Freelancer Experience '{freelancerExperience.FreelancerExperienceID}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -138,7 +148,7 @@ namespace ProfileMatching.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FreelancerExperienceID,UserId,EmploymentTypeId,CompanyName,StartDate,EndDate")] FreelancerExperience freelancerExperience)
+        public async Task<IActionResult> Edit(int id, [Bind("FreelancerExperienceID,UserId,EmploymentTypeId,CompanyName,StartDate,EndDate")] Models.FreelancerExperience freelancerExperience)
         {
             if (id != freelancerExperience.FreelancerExperienceID)
             {
@@ -148,7 +158,16 @@ namespace ProfileMatching.Controllers
                 try
                 {
                     _context.Update(freelancerExperience);
-                    await _context.SaveChangesAsync();
+
+                    var activityLog = new Activity
+                    {
+                        UserId = _userManager.GetUserId(HttpContext.User),
+                        ActivityDescription = $"Freelancer Experience '{freelancerExperience.FreelancerExperienceID}' was edited",
+                        ActivityDate = DateTime.Now
+                    };
+                    _context.Activities.Add(activityLog);
+
+                await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -213,7 +232,15 @@ namespace ProfileMatching.Controllers
             {
                 _context.FreelancerExperiences.Remove(freelancerExperience);
             }
-            
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"Freelancer Experience '{freelancerExperience.FreelancerExperienceID}' was deleted",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);

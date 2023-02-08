@@ -182,15 +182,17 @@ namespace ProfileMatching.Controllers
             if (city != null)
             {
                 _context.Cities.Remove(city);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"City '{city.CityName}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
             }
 
-            var activityLog = new Activity
-            {
-                UserId = _userManager.GetUserId(HttpContext.User),
-                ActivityDescription = $"City '{city.CityName}' was deleted",
-                ActivityDate = DateTime.Now
-            };
-            _context.Activities.Add(activityLog);
+            
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

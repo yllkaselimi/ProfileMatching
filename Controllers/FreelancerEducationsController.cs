@@ -88,6 +88,15 @@ namespace ProfileMatching.Controllers
         {
 
             _context.Add(freelancerEducation);
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"Freelancer Education '{freelancerEducation.FreelancerEducationid}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -147,7 +156,16 @@ namespace ProfileMatching.Controllers
             try
             {
                     _context.Update(freelancerEducation);
-                    await _context.SaveChangesAsync();
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Freelancer Education '{freelancerEducation.FreelancerEducationid}' was edited",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
+                await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -209,8 +227,16 @@ namespace ProfileMatching.Controllers
             if (freelancerEducation != null)
             {
                 _context.FreelancerEducations.Remove(freelancerEducation);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Freelancer Education '{freelancerEducation.FreelancerEducationid}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
             }
-            
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);

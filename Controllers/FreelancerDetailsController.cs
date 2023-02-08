@@ -105,6 +105,15 @@ namespace ProfileMatching.Controllers
         {
 
             _context.Add(freelancerDetails);
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"Freelancer Details '{freelancerDetails.FreelancerDetailsId}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -169,7 +178,16 @@ namespace ProfileMatching.Controllers
                 try
                 {
                     _context.Update(freelancerDetails);
-                    await _context.SaveChangesAsync();
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Freelancer Details '{freelancerDetails.FreelancerDetailsId}' was edited",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
+                await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -239,6 +257,14 @@ namespace ProfileMatching.Controllers
             if (freelancerDetails != null)
             {
                 _context.FreelancerDetails.Remove(freelancerDetails);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Freelancer Details '{freelancerDetails.FreelancerDetailsId}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
             }
             
             await _context.SaveChangesAsync();

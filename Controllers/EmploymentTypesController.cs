@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,12 @@ namespace ProfileMatching.Controllers
     public class EmploymentTypesController : Controller
     {
         private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EmploymentTypesController(DataContext context)
+        public EmploymentTypesController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: EmploymentTypes
@@ -58,6 +61,15 @@ namespace ProfileMatching.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(employmentType);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Employment Type '{employmentType.EmploymentTypeName}' was created",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -97,6 +109,15 @@ namespace ProfileMatching.Controllers
                 try
                 {
                     _context.Update(employmentType);
+
+                    var activityLog = new Activity
+                    {
+                        UserId = _userManager.GetUserId(HttpContext.User),
+                        ActivityDescription = $"Employment Type '{employmentType.EmploymentTypeName}' was edited",
+                        ActivityDate = DateTime.Now
+                    };
+                    _context.Activities.Add(activityLog);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -146,6 +167,14 @@ namespace ProfileMatching.Controllers
             if (employmentType != null)
             {
                 _context.EmploymentTypes.Remove(employmentType);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Employment Type '{employmentType.EmploymentTypeName}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
             }
             
             await _context.SaveChangesAsync();

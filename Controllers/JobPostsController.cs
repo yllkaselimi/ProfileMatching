@@ -89,6 +89,15 @@ namespace ProfileMatching.Controllers
         {
             jobPost.CompanyName = _context.ClientDetails.FirstOrDefault(x => x.UserId == jobPost.UserId).CompanyName;
             _context.Add(jobPost);
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"City '{jobPost.JobPostName}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -149,6 +158,15 @@ namespace ProfileMatching.Controllers
             {
                 jobPost.CompanyName = _context.ClientDetails.FirstOrDefault(x => x.UserId == jobPost.UserId).CompanyName;
                 _context.Update(jobPost);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"City '{jobPost.JobPostName}' was edited",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
                 await _context.SaveChangesAsync();
                 
             }
@@ -214,6 +232,14 @@ namespace ProfileMatching.Controllers
             {
                 _context.JobPosts.Remove(jobPost);
             }
+
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"City '{jobPost.JobPostName}' was deleted",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
 
             await _context.SaveChangesAsync();
 

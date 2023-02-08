@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,12 @@ namespace ProfileMatching.Controllers
     public class SlidersController : Controller
     {
         private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public SlidersController(DataContext context)
+        public SlidersController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Sliders
@@ -58,7 +61,15 @@ namespace ProfileMatching.Controllers
            // if (ModelState.IsValid)
            // {
                 _context.Add(slider);
-                await _context.SaveChangesAsync();
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"Slider '{slider.SliderTitle}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
+            await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
           //  }
             return View(slider);
@@ -97,7 +108,14 @@ namespace ProfileMatching.Controllers
                 try
                 {
                     _context.Update(slider);
-                    await _context.SaveChangesAsync();
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Slider '{slider.SliderTitle}' was edited",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+                await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,6 +164,13 @@ namespace ProfileMatching.Controllers
             if (slider != null)
             {
                 _context.Sliders.Remove(slider);
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Slider '{slider.SliderTitle}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
             }
             
             await _context.SaveChangesAsync();

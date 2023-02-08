@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,12 @@ namespace ProfileMatching.Controllers
     public class CategoriesController : Controller
     {
         private readonly DataContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public CategoriesController(DataContext context)
+        public CategoriesController(DataContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Categories
@@ -72,7 +75,16 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Create([Bind("CategoryId,CategoryName")] Category category)
         {
                 _context.Add(category);
-                await _context.SaveChangesAsync();
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Category '{category.CategoryName}' was created",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
+            await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
 
             return View(category);
@@ -109,6 +121,15 @@ namespace ProfileMatching.Controllers
             try
             {
                 _context.Update(category);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Category '{category.CategoryName}' was edited",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -158,6 +179,14 @@ namespace ProfileMatching.Controllers
             if (category != null)
             {
                 _context.Categories.Remove(category);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Category '{category.CategoryName}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
             }
             
             await _context.SaveChangesAsync();

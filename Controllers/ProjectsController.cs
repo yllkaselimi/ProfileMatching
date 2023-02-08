@@ -96,7 +96,14 @@ namespace ProfileMatching.Controllers
         {
 
             _context.Add(project);
- 
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"Project '{project.ProjectName}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);
@@ -159,6 +166,14 @@ namespace ProfileMatching.Controllers
             try
             {
                 _context.Update(project);
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Project '{project.ProjectName}' was edited",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -223,8 +238,19 @@ namespace ProfileMatching.Controllers
             if (project != null)
             {
                 _context.Projects.Remove(project);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Project '{project.ProjectName}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+
+                _context.Activities.Add(activityLog);
             }
-            
+
+    
+
             await _context.SaveChangesAsync();
 
             var userId = _userManager.GetUserId(HttpContext.User);

@@ -88,7 +88,15 @@ namespace ProfileMatching.Controllers
         
                 _context.Add(contact);
 
-                await _context.SaveChangesAsync();
+            var activityLog = new Activity
+            {
+                UserId = _userManager.GetUserId(HttpContext.User),
+                ActivityDescription = $"Contact message '{contact.Message}' was created",
+                ActivityDate = DateTime.Now
+            };
+            _context.Activities.Add(activityLog);
+
+            await _context.SaveChangesAsync();
 
                 var userId = _userManager.GetUserId(HttpContext.User);
                 var user = _context.Users.Where(x => x.Id == userId).First();
@@ -148,7 +156,16 @@ namespace ProfileMatching.Controllers
                 try
                 {
                     _context.Update(contact);
-                    await _context.SaveChangesAsync();
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Contact message '{contact.Message}' was edited",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
+
+                await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -199,6 +216,14 @@ namespace ProfileMatching.Controllers
             if (contact != null)
             {
                 _context.Contacts.Remove(contact);
+
+                var activityLog = new Activity
+                {
+                    UserId = _userManager.GetUserId(HttpContext.User),
+                    ActivityDescription = $"Contact message '{contact.Message}' was deleted",
+                    ActivityDate = DateTime.Now
+                };
+                _context.Activities.Add(activityLog);
             }
             
             await _context.SaveChangesAsync();
