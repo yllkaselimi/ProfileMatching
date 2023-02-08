@@ -16,45 +16,38 @@
 <div class="container">
 <h1>Applicants for Job "@ViewBag.JobName"</h1>
 
-
 @if(Model.Count() == 0)
 {
     <h3>Nothing to show here.</h3>
 }
-else
-{
-   <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.JobPostId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.JobPostId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
+else{
 
-            <td>
-                <form asp-controller="ApplicantsPerJobs" asp-action="Delete" method="post" asp-route-id="@item.ApplicantPerJobId">
-                    <button>Delete Application</button>
-                </form>
-            </td>
-        </tr>
+        <div class="card my-3">
+            <div class="card-body">
+                <div class="row gy-3">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        @*<h6 class="card-title">@Html.DisplayFor(modelItem => item.JobPost.JobPostName) | @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)</h6>*@
+                                        <h6 class="card-title">@Html.DisplayFor(modelItem => item.JobPost.JobPostName) | @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)</h6>
+                                    </div>
 
-}
-    </tbody>
-</table>
+                                    <hr>
+
+                                    <form asp-controller="ApplicantsPerJobs" asp-action="Delete" method="post" asp-route-id="@item.ApplicantPerJobId">
+                                        <button class="btn btn-danger btn-sm mb-1" style="width:100%;">Delete Application</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
 
 <div class="container">
     @if(pager.TotalPages > 0)

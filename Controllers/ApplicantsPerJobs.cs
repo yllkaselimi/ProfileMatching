@@ -20,7 +20,7 @@ namespace ProfileMatching.Controllers
 
         public async Task<IActionResult> Index(int pg=1)
         {
-            List<ApplicantsPerJob> applicantsPerJobs = _context.ApplicantsPerJobs.ToList();
+            List<ApplicantsPerJob> applicantsPerJobs = _context.ApplicantsPerJobs.Include(j => j.JobPost).Include(j => j.ApplicationUser).ToList();
 
             const int pageSize = 4;
             if (pg < 1)
@@ -95,7 +95,7 @@ namespace ProfileMatching.Controllers
             ViewData["JobName"] = job.JobPostName;
             //^qitu jobName e kena marr veq per me "bajt" n view tani me mujt me ja thirr
 
-            var applicants = await _context.ApplicantsPerJobs.Where(m => m.JobPostId == id).ToListAsync();
+            var applicants = await _context.ApplicantsPerJobs.Include(j => j.JobPost).Include(j => j.ApplicationUser).Where(m => m.JobPostId == id).ToListAsync();
             if (applicants == null)
             {
                 return NotFound();
