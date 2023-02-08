@@ -30,6 +30,10 @@
                 {
                     <li><a class="dropdown-item" href="/clientprofile">Profile</a></li>
                 }
+                else if (User.IsInRole("Admin"))
+                {
+                    <li><a class="dropdown-item" href="/">Dashboard</a></li>
+                }
                 
 
                 <li><a class="dropdown-item" href="/Identity/Account/Manage">Edit Profile</a></li>

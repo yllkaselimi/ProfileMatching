@@ -8,11 +8,21 @@
 }
 <div class="container">
 @if (!(SignInManager.IsSignedIn(User)))
-{
-        <h1>Bohu log in vllaqko</h1>
+    {
+        <div class="px-4 py-5 text-center" style="margin-top:100px;margin-bottom:100px">
+        <h1 class="display-5 fw-bold">Welcome to JobMatch</h1>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sed ante ac nisi euismod tincidunt. Ut nec auctor diam. Curabitur sit amet porttitor ligula, non feugiat dolor. Praesent pharetra felis eu fermentum aliquam. Cras at facilisis nulla. Aliquam sit amet ligula quis elit tristique accumsan. Sed quis lacus vitae orci congue porta. Pellentesque at eleifend ante. In velit ipsum, fringilla in arcu id, bibendum luctus justo.</p>
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="/Identity/Account/Login"><button type="button" class="btn btn-primary btn-lg px-4 gap-3">Login</button></a>
+            <a href="/Identity/Account/Register"><button type="button" class="btn btn-outline-primary btn-lg px-4">Register</button></a>
+          </div>
+        </div>
+      </div>
     }
     else
     {
+        if (!User.IsInRole("Admin")){
         <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -60,6 +70,7 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
+        }
     }
 
 @if (User.IsInRole("Freelancer")){
@@ -291,19 +302,121 @@
 
 }
 
-@*@if (User.IsInRole("Admin")){
+@if (User.IsInRole("Admin")){
+    <h1 class="my-5">Admin Dashboard</h1>
+    <div class="card my-5">
+            <div class="card-body">
+                <div class="row gy-5">
 
-    <a asp-action="Index" asp-controller="Categories">Manage Categories</a>
-    <a asp-action="Index" asp-controller="Cities">Manage Cities</a>
-    <a asp-action="Index" asp-controller="EmploymentTypes">Manage Employment Types</a>
 
-    <a asp-action="Index" asp-controller="FreelancerDetails">Manage Freelancer Details</a>
-    <a asp-action="Index" asp-controller="FreelancerEducations">Manage Freelancer Educations</a>
-    <a asp-action="Index" asp-controller="FreelancerExperiences">Manage Freelancer Experiences</a>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Categories</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="Categories" class="w-100 btn btn-sm btn-primary mb-2">Manage Categories</a>
+                                <a asp-action="Create" asp-controller="Categories" class="w-100 btn btn-sm btn-outline-primary">Create Category</a>
+                            </div>
+                        </div>
+                    </div>
 
-    <a asp-action="Index" asp-controller="ClientDetails">Manage Client Details</a>
-    <a asp-action="Index" asp-controller="JobPosts">Manage Job Posts</a>
-    <a asp-action="Index" asp-controller="ApplicantsPerJobs">Manage Job Applications</a>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Categories</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="Cities" class="w-100 btn btn-sm btn-primary mb-2">Manage Cities</a>
+                                <a asp-action="Create" asp-controller="Cities" class="w-100 btn btn-sm btn-outline-primary">Create City</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Employment Types</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="EmploymentTypes" class="w-100 btn btn-sm btn-primary mb-2">Manage Employment Types</a>
+                                <a asp-action="Create" asp-controller="EmploymentTypes" class="w-100 btn btn-sm btn-outline-primary">Create Employment Type</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Freelancer Details</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="FreelancerDetails" class="w-100 btn btn-sm btn-primary my-3">Manage Freelancer Details</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Freelancer Educations</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="FreelancerEducations" class="w-100 btn btn-sm btn-primary my-3">Manage Freelancer Educations</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Freelancer Experiences</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="FreelancerExperiences" class="w-100 btn btn-sm btn-primary my-3">Manage Freelancer Experiences</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Client Details</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="ClientDetails" class="w-100 btn btn-sm btn-primary my-3">Manage Client Details</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Job Posts</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="JobPosts" class="w-100 btn btn-sm btn-primary my-3">Manage Job Posts</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Job Applications</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="ApplicantsPerJobs" class="w-100 btn btn-sm btn-primary my-3">Manage Job Applications</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="text-center">Activity Log</h4>
+                                <hr />
+                                <a asp-action="Index" asp-controller="Activities" class="w-100 btn btn-sm btn-primary my-3">Manage Activities</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+
+ 
     
 }
-</div>*@
+</div>
