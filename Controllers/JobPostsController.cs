@@ -92,6 +92,7 @@ namespace ProfileMatching.Controllers
         public async Task<IActionResult> Create([Bind("JobPostId,JobPostName,JobPostBudget,JobLength,JobPostDescription,JobApplicationDeadline,CategoryId,UserId")] JobPost jobPost)
         {
             jobPost.CompanyName = _context.ClientDetails.FirstOrDefault(x => x.UserId == jobPost.UserId).CompanyName;
+            jobPost.CreationDate = DateTime.Now;
             _context.Add(jobPost);
 
             var activityLog = new Activity
