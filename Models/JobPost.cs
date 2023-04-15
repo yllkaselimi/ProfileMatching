@@ -23,6 +23,7 @@ namespace ProfileMatching.Models
         public ApplicationUser ApplicationUser { get; set; }
 
         public string? CompanyName { get; set; }
+        public DateTime CreationDate { get; set; }
 
 
 
