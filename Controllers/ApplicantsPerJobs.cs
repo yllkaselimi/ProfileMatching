@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProfileMatching.Areas.Admin.Controllers;
+using ProfileMatching.Migrations;
 using ProfileMatching.Models;
 
 namespace ProfileMatching.Controllers
@@ -56,8 +57,9 @@ namespace ProfileMatching.Controllers
             var itemToAdd = new ApplicantsPerJob
             {
                 UserId = userId,
-                JobPostId = id
-            };
+                JobPostId = id,
+                ApplicationDate = DateTime.Now
+        };
 
             //check nese ekziston ndatabaz ni record/rresht ku veq useri veq ka apliku per qat job
             if((_context.ApplicantsPerJobs.Any(p => p.JobPostId == id && p.UserId == userId)))
