@@ -109,6 +109,27 @@ namespace ProfileMatching.Controllers
             return View(applicants);
         }
 
+
+        [Authorize(Roles = "Admin, Client")]
+        public async Task<IActionResult> HireApplicant(int? id)
+        {
+            if (id == null || _context.ApplicantsPerJobs == null)
+            {
+                return NotFound();
+            }
+
+            var hiredperson = _context.ApplicantsPerJobs.Where(x => x.ApplicantPerJobId == id).First();
+
+            hiredperson.HiredStatus = true;
+
+            _context.Update(hiredperson);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "ClientProfile");
+
+        }
+
         [Authorize(Roles = "Admin, Client")]
         public async Task<IActionResult> Delete(int? id)
         {

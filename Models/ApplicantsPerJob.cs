@@ -9,7 +9,6 @@ namespace ProfileMatching.Models
     {
         [Key]
         public int ApplicantPerJobId { get; set; }
- 
         public string? UserId { get; set; }
         [ForeignKey("UserId")]
         public ApplicationUser ApplicationUser { get; set; }
@@ -17,5 +16,8 @@ namespace ProfileMatching.Models
         public int? JobPostId { get; set; }
         [ForeignKey("JobPostId")]
         public JobPost JobPost { get; set; }
+        public DateTime ApplicationDate { get; set; }
+        public bool HiredStatus { get; set; }
+
     }
 }

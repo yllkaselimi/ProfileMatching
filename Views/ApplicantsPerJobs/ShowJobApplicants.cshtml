@@ -40,6 +40,9 @@ else{
                                     <form asp-controller="ApplicantsPerJobs" asp-action="Delete" method="post" asp-route-id="@item.ApplicantPerJobId">
                                         <button class="btn btn-danger btn-sm mb-1" style="width:100%;">Delete Application</button>
                                     </form>
+                                          <form asp-controller="ApplicantsPerJobs" asp-action="HireApplicant" method="post" asp-route-id="@item.ApplicantPerJobId">
+                                        <button class="btn btn-danger btn-sm mb-1" style="width:100%;">Hire Applicant</button>
+                                        </form>
                                 </div>
                             </div>
                         </div>
