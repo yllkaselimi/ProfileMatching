@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ProfileMatching.Controllers;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
+using ProfileMatching.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProfileMatching.Areas.Identity.Pages.Account
 {
@@ -120,12 +122,33 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+
                     //uncomment this kur don ni user me bo admin, veq qite te userId Id e userit
                     /*
                     var userId = "025c5af0-daa3-46ba-a808-da23a5ce9faf";
                     var user = _context.Users.Where(x => x.Id == userId).First();
                     await _userManager.RemoveFromRoleAsync(user, "Freelancer");
                     await _userManager.AddToRoleAsync(user, "Admin");*/
+
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    var userId = user.Id;
+
+                    var existingLogin = await _context.RecentLogins.FirstOrDefaultAsync(l => l.UserId == userId);
+                    if (existingLogin != null)
+                    {
+                        existingLogin.LoginDate = DateTime.Now;
+                        _context.Update(existingLogin);
+                    }
+                    else
+                    {
+                        var recentLogin = new RecentLogin
+                        {
+                            UserId = userId,
+                            LoginDate = DateTime.Now
+                        };
+                        _context.RecentLogins.Add(recentLogin);
+                    }
+                    await _context.SaveChangesAsync();
 
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
