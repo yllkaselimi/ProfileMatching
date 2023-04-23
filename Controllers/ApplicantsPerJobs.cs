@@ -22,7 +22,7 @@ namespace ProfileMatching.Controllers
 
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(int pg=1)
+        public async Task<IActionResult> Index(int pg = 1)
         {
             List<ApplicantsPerJob> applicantsPerJobs = _context.ApplicantsPerJobs.Include(j => j.JobPost).Include(j => j.ApplicationUser).ToList();
 
@@ -59,10 +59,10 @@ namespace ProfileMatching.Controllers
                 UserId = userId,
                 JobPostId = id,
                 ApplicationDate = DateTime.Now
-        };
+            };
 
             //check nese ekziston ndatabaz ni record/rresht ku veq useri veq ka apliku per qat job
-            if((_context.ApplicantsPerJobs.Any(p => p.JobPostId == id && p.UserId == userId)))
+            if ((_context.ApplicantsPerJobs.Any(p => p.JobPostId == id && p.UserId == userId)))
             {
                 TempData["Message"] = "You already applied for this job";
                 return Redirect(HttpContext.Request.Headers["Referer"]);
@@ -71,7 +71,7 @@ namespace ProfileMatching.Controllers
             TempData["SuccessfulApplication"] = "Successful Application!";
             _context.ApplicantsPerJobs.Add(itemToAdd);
             await _context.SaveChangesAsync();
-            return Redirect(HttpContext.Request.Headers["Referer"]); 
+            return Redirect(HttpContext.Request.Headers["Referer"]);
         }
 
         [Authorize(Roles = "Freelancer")]
@@ -82,7 +82,7 @@ namespace ProfileMatching.Controllers
 
             if (job != null)
             {
-               _context.ApplicantsPerJobs.Remove(job);
+                _context.ApplicantsPerJobs.Remove(job);
             }
 
             await _context.SaveChangesAsync();
@@ -98,7 +98,7 @@ namespace ProfileMatching.Controllers
                 return NotFound();
             }
 
-            var job =_context.JobPosts.Where(x => x.JobPostId == id).First();
+            var job = _context.JobPosts.Where(x => x.JobPostId == id).First();
             ViewData["JobName"] = job.JobPostName;
             //^qitu jobName e kena marr veq per me "bajt" n view tani me mujt me ja thirr
 
@@ -113,23 +113,20 @@ namespace ProfileMatching.Controllers
 
 
         [Authorize(Roles = "Admin, Client")]
-        public async Task<IActionResult> HireApplicant(int? id)
+        public async Task<IActionResult> HireApplicant(int? id, bool hired)
         {
-            if (id == null || _context.ApplicantsPerJobs == null)
-            {
-                return NotFound();
-            }
-
             var hiredperson = _context.ApplicantsPerJobs.Where(x => x.ApplicantPerJobId == id).First();
+            
+            if (hiredperson == null)
+                return NotFound();
 
-            hiredperson.HiredStatus = true;
+            hiredperson.HiredStatus = !hired;
 
             _context.Update(hiredperson);
 
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", "ClientProfile");
-
         }
 
         [Authorize(Roles = "Admin, Client")]
@@ -147,7 +144,7 @@ namespace ProfileMatching.Controllers
             {
                 _context.ApplicantsPerJobs.Remove(application);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction("ShowJobApplicants", new { id = jobId });
         }

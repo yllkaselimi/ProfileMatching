@@ -6,7 +6,7 @@
     Pager pager = new Pager();
     int pageNo = 0;
 
-    if(ViewBag.Pager != null)
+    if (ViewBag.Pager != null)
     {
         pager = ViewBag.Pager;
         pageNo = pager.CurrentPage;
@@ -14,13 +14,14 @@
 }
 
 <div class="container">
-<h1>Applicants for Job "@ViewBag.JobName"</h1>
+    <h1>Applicants for Job "@ViewBag.JobName"</h1>
 
-@if(Model.Count() == 0)
-{
-    <h3>Nothing to show here.</h3>
-}
-else{
+    @if (Model.Count() == 0)
+    {
+        <h3>Nothing to show here.</h3>
+    }
+    else
+    {
 
         <div class="card my-3">
             <div class="card-body">
@@ -40,9 +41,17 @@ else{
                                     <form asp-controller="ApplicantsPerJobs" asp-action="Delete" method="post" asp-route-id="@item.ApplicantPerJobId">
                                         <button class="btn btn-danger btn-sm mb-1" style="width:100%;">Delete Application</button>
                                     </form>
-                                          <form asp-controller="ApplicantsPerJobs" asp-action="HireApplicant" method="post" asp-route-id="@item.ApplicantPerJobId">
-                                        <button class="btn btn-danger btn-sm mb-1" style="width:100%;">Hire Applicant</button>
-                                        </form>
+
+                                    <form asp-controller="ApplicantsPerJobs" asp-action="HireApplicant" method="post" asp-route-hired="@item.HiredStatus" asp-route-id="@item.ApplicantPerJobId">
+                                        @if(@item.HiredStatus)
+                                        {
+                                            <button class="btn btn-danger btn-sm mb-1" style="width:100%;">Unhire</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-danger btn-sm mb-1" style="width:100%;">Hire</button>
+                                        }
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -52,43 +61,43 @@ else{
         </div>
 
 
-<div class="container">
-    @if(pager.TotalPages > 0)
-    {
-        <ul class="pagination justify-content-end">
-            @if(pager.CurrentPage > 1)
+        <div class="container">
+            @if (pager.TotalPages > 0)
             {
-                <li class="page-item">
-                    <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="1">First</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
-                </li>
+                <ul class="pagination justify-content-end">
+                    @if (pager.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="1">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+                        </li>
+                    }
+
+                    @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                    {
+                        <li class="page-item @(pge==pager.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="@pge"> @pge</a>
+                        </li>
+                    }
+
+                    @if (pager.CurrentPage < pager.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="@(pager.TotalPages)">Last</a>
+                        </li>
+
+                    }
+
+                </ul>
             }
 
-            @for(var pge = pager.StartPage; pge <= pager.EndPage; pge++)
-            {
-                <li class="page-item @(pge==pager.CurrentPage ? "active" : "")">
-                    <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="@pge"> @pge</a>
-                </li>
-            }
+        </div>
 
-            @if(pager.CurrentPage < pager.TotalPages)
-            {
-                <li class="page-item">
-                    <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" asp-controller="ApplicantsPerJobs" asp-action="Index" asp-route-pg="@(pager.TotalPages)">Last</a>
-                </li>
-        
-            }
 
-        </ul>
     }
-
-</div>
-
-
-}
 </div>
