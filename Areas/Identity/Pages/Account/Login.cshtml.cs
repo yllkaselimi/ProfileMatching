@@ -107,6 +107,7 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
+
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -130,10 +131,30 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                     await _userManager.RemoveFromRoleAsync(user, "Freelancer");
                     await _userManager.AddToRoleAsync(user, "Admin");*/
 
+                    
+                    //get user id and freelancer category
                     var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
                     var userId = user.Id;
+                    var category = (await _context.FreelancerDetails.FirstOrDefaultAsync(c => c.UserId == userId)).Category;
 
+                    //check for last login
                     var existingLogin = await _context.RecentLogins.FirstOrDefaultAsync(l => l.UserId == userId);
+                  
+                    //para se me rujt new recentLogin, check for new jobPosts with the same category
+                    /*var recentJobPosts = await _context.JobPosts
+                        .Where(j => j.CreationDate > existingLogin.LoginDate && j.Category == category)
+                        .ToListAsync();*/
+
+                    /*
+                    string key = "newJobPosts";
+                     int value = recentJobPosts.Count;
+                     string script = "<script>window.localStorage.setItem('" + key + "', '" + value + "');</script>";
+                     ViewData["Script"] = script;
+
+                    //ViewData["JobCount"] = recentJobPosts.Count;*/
+                    
+                   
+
                     if (existingLogin != null)
                     {
                         existingLogin.LoginDate = DateTime.Now;
