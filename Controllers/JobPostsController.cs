@@ -302,7 +302,18 @@ namespace ProfileMatching.Controllers
             return View(await result.ToListAsync());
         }
 
+        private async Task ArchivedJobPost()
+        {
+            var expiredJobPost = await _context.JobPosts.Where(j => j.JobApplicationDeadline < DateTime.UtcNow).ToListAsync();
 
+            foreach (var JobPost in expiredJobPost)
+            {
+                JobPost.IsArchived = true;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+ 
 
         public async Task<IActionResult> FilterJobPost(int? id, int pg=1)
         {
