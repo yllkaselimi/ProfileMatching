@@ -13,6 +13,7 @@ namespace ProfileMatching.Models
         public DateTime JobLength { get; set; }
         public string JobPostDescription { get; set; }
         public DateTime JobApplicationDeadline { get; set; }
+        public bool IsArchived { get; set; }
 
         public int? CategoryId { get; set; }
         [ForeignKey("CategoryId")]

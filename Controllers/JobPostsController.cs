@@ -302,6 +302,8 @@ namespace ProfileMatching.Controllers
             return View(await result.ToListAsync());
         }
 
+
+
         public async Task<IActionResult> FilterJobPost(int? id, int pg=1)
         {
             //kodi per me rujt rolin e logged in user me ni viewdata
