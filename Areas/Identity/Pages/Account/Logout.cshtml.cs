@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace ProfileMatching.Areas.Identity.Pages.Account
 {
@@ -16,15 +17,25 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public LogoutModel(SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger, UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            var claim = User.FindFirst("Kllejmi");
+            if (claim != null)
+            {
+                await _signInManager.UserManager.RemoveClaimAsync(user, claim);
+            }
+
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)

@@ -18,6 +18,7 @@ using ProfileMatching.Controllers;
 using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
 using ProfileMatching.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ProfileMatching.Areas.Identity.Pages.Account
 {
@@ -135,25 +136,33 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                     //get user id and freelancer category
                     var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
                     var userId = user.Id;
-                    var category = (await _context.FreelancerDetails.FirstOrDefaultAsync(c => c.UserId == userId)).Category;
 
                     //check for last login
                     var existingLogin = await _context.RecentLogins.FirstOrDefaultAsync(l => l.UserId == userId);
-                  
-                    //para se me rujt new recentLogin, check for new jobPosts with the same category
-                    /*var recentJobPosts = await _context.JobPosts
-                        .Where(j => j.CreationDate > existingLogin.LoginDate && j.Category == category)
-                        .ToListAsync();*/
 
-                    /*
-                    string key = "newJobPosts";
-                     int value = recentJobPosts.Count;
-                     string script = "<script>window.localStorage.setItem('" + key + "', '" + value + "');</script>";
-                     ViewData["Script"] = script;
-
-                    //ViewData["JobCount"] = recentJobPosts.Count;*/
+                    if (await _userManager.IsInRoleAsync(user, "Freelancer"))
+                    {
+                        var category = (await _context.FreelancerDetails.FirstOrDefaultAsync(c => c.UserId == userId)).Category;
+                        //para se me rujt new recentLogin, check for new jobPosts with the same category
+                        var recentJobPosts = await _context.JobPosts
+                            .Where(j => j.CreationDate > existingLogin.LoginDate && j.Category == category)
+                            .ToListAsync();
+                    }
                     
-                   
+
+              
+
+                    // Add the custom variable to the user's claims
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim("Kllejmi", "poBon33")
+                    };
+
+
+                    await _signInManager.UserManager.AddClaimsAsync(user, claims);
+                    await _signInManager.RefreshSignInAsync(user);
+                    
 
                     if (existingLogin != null)
                     {

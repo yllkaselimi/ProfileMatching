@@ -1,8 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+ @{
+    // Get the custom variable from the user's claims
+    var customVariable = User.FindFirstValue("Kllejmi");
+}
 
 
 <ul class="navbar-nav">
@@ -21,7 +26,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill me-2"></i>@UserManager.GetUserName(User)</a>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
-
+                      <h1>@customVariable</h1>
                 @if (User.IsInRole("Freelancer"))
                 {
                     <li><a class="dropdown-item" href="/freelancerprofile">Profile</a></li>
