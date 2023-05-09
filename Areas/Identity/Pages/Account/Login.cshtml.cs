@@ -136,17 +136,20 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                     //get user id and freelancer category
                     var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
                     var userId = user.Id;
+                    string jobCount = "";
 
                     //check for last login
                     var existingLogin = await _context.RecentLogins.FirstOrDefaultAsync(l => l.UserId == userId);
 
                     if (await _userManager.IsInRoleAsync(user, "Freelancer"))
                     {
-                        var category = (await _context.FreelancerDetails.FirstOrDefaultAsync(c => c.UserId == userId)).Category;
+                        var category = (await _context.FreelancerDetails.FirstOrDefaultAsync(c => c.UserId == userId)).CategoryId;
                         //para se me rujt new recentLogin, check for new jobPosts with the same category
-                        var recentJobPosts = await _context.JobPosts
-                            .Where(j => j.CreationDate > existingLogin.LoginDate && j.Category == category)
+                        var newJobPosts = await _context.JobPosts
+                            .Where(j => j.CreationDate > existingLogin.LoginDate && j.CategoryId == category)
                             .ToListAsync();
+
+                        jobCount = newJobPosts.Count.ToString();
                     }
                     
 
@@ -156,7 +159,7 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
 
                     var claims = new List<Claim>
                     {
-                        new Claim("Kllejmi", "poBon33")
+                        new Claim("NewJobPosts", jobCount)
                     };
 
 
