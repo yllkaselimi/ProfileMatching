@@ -18,6 +18,7 @@ namespace ProfileMatching.Models
         public JobPost JobPost { get; set; }
         public DateTime ApplicationDate { get; set; }
         public bool HiredStatus { get; set; }
+        public DateTime HiredDate { get; set; }
 
     }
 }
