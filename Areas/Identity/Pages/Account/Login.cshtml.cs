@@ -141,7 +141,7 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                     //check for last login
                     var existingLogin = await _context.RecentLogins.FirstOrDefaultAsync(l => l.UserId == userId);
 
-                    if (await _userManager.IsInRoleAsync(user, "Freelancer"))
+                   if (await _userManager.IsInRoleAsync(user, "Freelancer"))
                     {
                         var category = (await _context.FreelancerDetails.FirstOrDefaultAsync(c => c.UserId == userId)).CategoryId;
                         //para se me rujt new recentLogin, check for new jobPosts with the same category
@@ -153,7 +153,6 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                     }
                     
 
-              
 
                     // Add the custom variable to the user's claims
 
