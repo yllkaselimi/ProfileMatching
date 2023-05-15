@@ -26,9 +26,19 @@ namespace ProfileMatching.Controllers
         }
 
         // GET: JobPosts
-        public async Task<IActionResult> Index(int pg=1)
+        public async Task<IActionResult> Index(int pg = 1)
         {
             ViewData["Categories"] = _context.Categories.ToList();
+
+            var expiredJobPost = await _context.JobPosts.Where(j => j.JobApplicationDeadline < DateTime.UtcNow).ToListAsync();
+
+            foreach (var jobPost in expiredJobPost)
+            {
+                jobPost.IsArchived = true;
+                _context.JobPosts.Update(jobPost);
+            }
+
+            await _context.SaveChangesAsync();
 
             List<JobPost> jobPosts = _context.JobPosts.Include(j => j.Category).Include(j => j.ApplicationUser).ToList();
 
