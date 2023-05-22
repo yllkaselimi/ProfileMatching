@@ -30,10 +30,25 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
         {
             var user = await _userManager.GetUserAsync(User);
 
-            var claim = User.FindFirst("NewJobPosts");
-            if (claim != null)
+            //remove newjobposts claim
+            var jobpostclaim = User.FindFirst("NewJobPosts");
+            if (jobpostclaim != null)
             {
-                await _signInManager.UserManager.RemoveClaimAsync(user, claim);
+                await _signInManager.UserManager.RemoveClaimAsync(user, jobpostclaim);
+            }
+
+            //remove hiredjobs claim
+            var hiredjobsclaim = User.FindFirst("HiredJobsCount");
+            if (hiredjobsclaim != null)
+            {
+                await _signInManager.UserManager.RemoveClaimAsync(user, hiredjobsclaim);
+            }
+
+            //remove ApplicantsCount claim
+            var applicantscount = User.FindFirst("ApplicantsCount");
+            if (applicantscount != null)
+            {
+                await _signInManager.UserManager.RemoveClaimAsync(user, applicantscount);
             }
 
             await _signInManager.SignOutAsync();

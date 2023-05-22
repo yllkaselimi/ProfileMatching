@@ -19,7 +19,7 @@ namespace ProfileMatching.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "Freelancers")]
+        [Authorize(Roles = "Freelancer")]
         public async Task<IActionResult> Index(int pg=1)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
