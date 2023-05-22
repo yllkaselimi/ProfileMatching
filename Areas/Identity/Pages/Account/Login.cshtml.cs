@@ -137,6 +137,8 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                     var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
                     var userId = user.Id;
                     string jobCount = "";
+                    string hiredJobCount = "";
+                    string applicantsCount = "";
 
                     //check for last login
                     var existingLogin = await _context.RecentLogins.FirstOrDefaultAsync(l => l.UserId == userId);
@@ -150,15 +152,31 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                             .ToListAsync();
 
                         jobCount = newJobPosts.Count.ToString();
+
+
+                        var hiredJobs = await _context.ApplicantsPerJobs.Where(j => j.UserId == userId && j.HiredStatus && j.HiredDate > existingLogin.LoginDate).ToListAsync();
+                        hiredJobCount = hiredJobs.Count.ToString();
+                    }
+
+                   if (await _userManager.IsInRoleAsync(user, "Client"))
+                    {
+                        var clientJobs = await _context.JobPosts.Where(j => j.UserId == userId).Select(j => j.JobPostId).ToListAsync();
+                        var newApplicants = await _context.ApplicantsPerJobs
+                            .Where(a => clientJobs.Contains((int)a.JobPostId) && a.ApplicationDate > existingLogin.LoginDate)
+                            .ToListAsync();
+
+                        applicantsCount = newApplicants.Count.ToString();
                     }
                     
 
 
-                    // Add the custom variable to the user's claims
+                    // Add the custom variables to the user's claims
 
                     var claims = new List<Claim>
                     {
-                        new Claim("NewJobPosts", jobCount)
+                        new Claim("NewJobPosts", jobCount),
+                        new Claim("HiredJobsCount", hiredJobCount),
+                        new Claim("ApplicantsCount", applicantsCount)
                     };
 
 

@@ -121,6 +121,7 @@ namespace ProfileMatching.Controllers
                 return NotFound();
 
             hiredperson.HiredStatus = !hired;
+            hiredperson.HiredDate = DateTime.Now;
 
             _context.Update(hiredperson);
 
