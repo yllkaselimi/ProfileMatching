@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +24,21 @@ namespace ProfileMatching.Controllers
 
         // GET: api/JobPostsAPI
         [HttpGet]
+
         public async Task<ActionResult<IEnumerable<JobPost>>> GetJobPosts()
         {
-            return await _context.JobPosts.ToListAsync();
+            var nameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+
+            var jobPosts = await _context.JobPosts.ToListAsync();
+
+            // Include only the name claim in the response JSON
+            var responseData = new
+            {
+                JobPosts = jobPosts,
+                NameClaim = nameClaim?.Value // Use null conditional operator to avoid null reference exception
+            };
+
+            return Ok(responseData);
         }
 
         // GET: api/JobPostsAPI/5

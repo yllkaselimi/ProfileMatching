@@ -27,7 +27,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials());
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
