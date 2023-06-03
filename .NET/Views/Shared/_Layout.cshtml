@@ -36,6 +36,10 @@
               <ul class="navbar-nav ms-md-auto gap-2">
                         @if (SignInManager.IsSignedIn(User))
                         {
+                                <li class="nav-item rounded">
+                                    <a class="nav-link" href="http://localhost:3000">Go to JobMatchConnect</a>
+                                </li>
+
                                 <li class="nav-item rounded notification-item">
                                     <a class="nav-link active" aria-current="page" href="/JobPosts">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">

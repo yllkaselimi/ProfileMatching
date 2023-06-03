@@ -24,7 +24,6 @@ namespace ProfileMatching.Controllers
 
         // GET: api/JobPostsAPI
         [HttpGet]
-
         public async Task<ActionResult<IEnumerable<JobPost>>> GetJobPosts()
         {
             var nameClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
@@ -39,6 +38,19 @@ namespace ProfileMatching.Controllers
             };
 
             return Ok(responseData);
+        }
+
+        [HttpGet("getUserCredentials")]
+        public async Task<ActionResult<IEnumerable<UserCredentials>>> GetUserCredentials()
+        {
+            var userCredentials = await _context.UserCredentials.ToListAsync();
+
+            if (userCredentials == null || userCredentials.Count == 0)
+            {
+                return NotFound(); // Or any other desired response, such as Ok(null)
+            }
+
+            return Ok(userCredentials);
         }
 
         // GET: api/JobPostsAPI/5

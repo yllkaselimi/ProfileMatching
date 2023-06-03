@@ -6,17 +6,20 @@ import Avatar from 'react-avatar';
 
 const Student = ({ _id, name, email, enrollnumber, removeStudent }) => {
 
-  const [puna2, setPuna2] = useState(""); // Use state to store the value of puna2
-
   useEffect(() => {
-    fetch('https://localhost:7044/api/jobpostsapi', { mode: 'cors', credentials: 'include' })
+    fetch('https://localhost:7044/api/jobpostsapi/getUserCredentials', { mode: 'cors', credentials: 'include' })
       .then(response => {
-        return response.json(); // Parse the response as JSON
+        if (response.ok) {
+          return response.json(); // Parse the response as JSON
+        } else if (response.status === 404) {
+          window.location.href = 'https://localhost:7044/Identity/Account/Login'; // Redirect to the login page
+        } else {
+          throw new Error('Error fetching user credentials');
+        }
       })
       .then(data => {
-        console.log('Name:', data); // Log the response data, which may contain the credentials
-        setPuna2(data.jobPosts[2].jobPostName); // Update the value of puna2 using setState (setPuna2)
-        console.log(puna2 + " qeee");
+        console.log('User:', data[0].userId);
+        console.log('Roli:', data[0].userRole);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -25,7 +28,6 @@ const Student = ({ _id, name, email, enrollnumber, removeStudent }) => {
 
   return(
     <tr>
-      <td>{ puna2 }</td>
       <td>{ name }</td>
       <td>{ email }</td>
       <td>{ enrollnumber }</td>

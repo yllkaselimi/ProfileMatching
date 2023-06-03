@@ -68,7 +68,6 @@ class Home extends Component {
         <table className="Table">
           <thead>
             <tr>
-              <th>Puna2</th>
               <th>Name</th>
               <th>Email</th>
               <th>Enrollment Number</th>

@@ -140,6 +140,19 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
                     string hiredJobCount = "";
                     string applicantsCount = "";
 
+                    var userRole = await _userManager.GetRolesAsync(user);
+
+                    // Create a new UserCredentials object
+                    var userCredentials = new UserCredentials
+                    {
+                        UserId = userId,
+                        UserRole = userRole.FirstOrDefault() // Assuming the user has only one role
+                    };
+
+                    // Add the UserCredentials object to the database
+                    _context.UserCredentials.Add(userCredentials);
+                    await _context.SaveChangesAsync();
+
                     //check for last login
                     var existingLogin = await _context.RecentLogins.FirstOrDefaultAsync(l => l.UserId == userId);
 

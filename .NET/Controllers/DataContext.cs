@@ -28,8 +28,7 @@ namespace ProfileMatching.Controllers
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<RecentLogin> RecentLogins { get; set; }
-
-
+        public DbSet<UserCredentials> UserCredentials { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
+using ProfileMatching.Controllers;
 
 namespace ProfileMatching.Areas.Identity.Pages.Account
 {
@@ -18,9 +19,10 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
         private readonly UserManager<IdentityUser> _userManager;
-
-        public LogoutModel(SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger, UserManager<IdentityUser> userManager)
+        private readonly DataContext _context;
+        public LogoutModel(DataContext context, SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger, UserManager<IdentityUser> userManager)
         {
+            _context = context;
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
@@ -50,6 +52,12 @@ namespace ProfileMatching.Areas.Identity.Pages.Account
             {
                 await _signInManager.UserManager.RemoveClaimAsync(user, applicantscount);
             }
+
+            // Delete all records from the UserCredentials table
+            _context.UserCredentials.RemoveRange(_context.UserCredentials);
+
+            // Save the changes to the database
+            await _context.SaveChangesAsync();
 
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
