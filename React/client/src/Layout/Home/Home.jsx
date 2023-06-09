@@ -5,6 +5,7 @@ import { PropagateLoader } from 'react-spinners';
 // Components
 import Student from "../../components/Student/Student";
 import SearchStudents from "../../components/SearchStudent/SearchStudents";
+import UserCredentials from "./UserCredentials";
 
 class Home extends Component {
   state = {
@@ -63,6 +64,7 @@ class Home extends Component {
 
     return (
       <div className="Table-Wrapper">
+        <UserCredentials />
         <h1>Students:</h1>
         <SearchStudents searchStudents={this.searchStudents} />
         <table className="Table">
