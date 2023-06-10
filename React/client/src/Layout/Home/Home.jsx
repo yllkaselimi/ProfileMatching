@@ -3,8 +3,8 @@ import "./Home.css";
 import axios from "axios";
 import { PropagateLoader } from 'react-spinners';
 // Components
-import Student from "../../components/Student/Student";
-import SearchStudents from "../../components/SearchStudent/SearchStudents";
+import Student from "../../components/Students/Student/Student";
+import SearchStudents from "../../components/Students/SearchStudent/SearchStudents";
 import UserCredentials from "./UserCredentials";
 
 class Home extends Component {

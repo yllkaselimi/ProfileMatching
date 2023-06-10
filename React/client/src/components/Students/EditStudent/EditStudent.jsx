@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import './EditStudent.css';
 import axios from "axios";
 import { withRouter } from 'react-router'
@@ -46,7 +46,7 @@ class EditStudent extends Component {
     if (this.state.response === "Student not found!")
       return <h1>Student not found!</h1>
     return (
-      <div className="Edit-Student-Wrapper">
+      <Fragment>
         <h1>Edit page</h1>
         <form onSubmit={this.updateStudentHandler}>
           <label htmlFor="name">Name:</label>
@@ -90,7 +90,7 @@ class EditStudent extends Component {
           <button type="submit" className="Edit-Student-Submit fa fa-pencil"></button>
         </form>
         <ToastContainer />
-      </div>
+      </Fragment>
     );
   }
 }

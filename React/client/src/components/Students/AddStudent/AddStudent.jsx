@@ -1,38 +1,40 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from 'react';
 import './AddStudent.css';
-import axios from "axios";
-import {toast, ToastContainer} from 'react-toastify';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 class AddStudent extends Component {
   state = {
-    name: "",
-    email: "",
-    enrollnumber: "",
-    response: ""
+    name: '',
+    email: '',
+    enrollnumber: '',
+    response: ''
   };
 
-  onChangeHandler = e => this.setState({ [e.target.name]: e.target.value });
+  onChangeHandler = (e) => this.setState({ [e.target.name]: e.target.value });
 
-  addStudent = async e => {
+  addStudent = async (e) => {
     e.preventDefault();
     try {
-      const newStudent = await axios.post("/api/students/", {
-          name: this.refs.name.value,
-          email: this.refs.email.value,
-          enrollnumber: this.refs.enrollnumber.value
-        }
-      );
+      const newStudent = await axios.post('/api/students/', {
+        name: this.refs.name.value,
+        email: this.refs.email.value,
+        enrollnumber: this.refs.enrollnumber.value
+      });
 
-      toast("Student " + newStudent.data.newStudent.name + " created successfully" ,{ type: toast.TYPE.SUCCESS, autoClose: 3000 });
+      toast(
+        'Student ' + newStudent.data.newStudent.name + ' created successfully',
+        { type: toast.TYPE.SUCCESS, autoClose: 3000 }
+      );
     } catch (err) {
-      toast(err.message ,{ type: toast.TYPE.ERROR, autoClose: 3000 });
+      toast(err.message, { type: toast.TYPE.ERROR, autoClose: 3000 });
     }
   };
 
   render() {
     return (
-      <div className="AddStudent-Wrapper">
+      <Fragment>
         <h1>Add Student:</h1>
         <form onSubmit={this.addStudent}>
           <label htmlFor="name">Name:</label>
@@ -48,7 +50,9 @@ class AddStudent extends Component {
             maxLength="33"
             id="name"
           />
-          <label htmlFor="email">email: <b>(must be a valid email)</b></label>
+          <label htmlFor="email">
+            email: <b>(must be a valid email)</b>
+          </label>
           <input
             type="text"
             placeholder="enter your email here"
@@ -77,7 +81,7 @@ class AddStudent extends Component {
           <button type="reset" className="Add-Student-Reset fa fa-refresh"></button>
         </form>
         <ToastContainer />
-      </div>
+      </Fragment>
     );
   }
 }
