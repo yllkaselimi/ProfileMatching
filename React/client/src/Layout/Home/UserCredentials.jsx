@@ -14,7 +14,45 @@ const UserCredentials = () => {
       })
       .then(data => {
         console.log('User:', data[0].userId);
-        console.log('Roli:', data[0].userRole);
+        console.log('Role:', data[0].userRole);
+
+        // Check if the userRole is "Client"
+        if (data[0].userRole === 'Client') {
+          // Fetch data from the new URL for Client
+          fetch('https://localhost:7044/api/ApplicantsPerJobs/GetJobpostsByClientId', { mode: 'cors', credentials: 'include' })
+            .then(response => {
+              if (response.ok) {
+                return response.json(); // Parse the response as JSON
+              } else {
+                throw new Error('Error fetching job posts by client ID');
+              }
+            })
+            .then(jobPostsData => {
+              console.log('Job Posts (Client):', jobPostsData);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+
+        // Check if the userRole is "Freelancer"
+        if (data[0].userRole === 'Freelancer') {
+          // Fetch data from the new URL for Freelancer
+          fetch('https://localhost:7044/api/ApplicantsPerJobs/getmyhiredjobs', { mode: 'cors', credentials: 'include' })
+            .then(response => {
+              if (response.ok) {
+                return response.json(); // Parse the response as JSON
+              } else {
+                throw new Error('Error fetching hired jobs');
+              }
+            })
+            .then(hiredJobsData => {
+              console.log('Hired Jobs (Freelancer):', hiredJobsData);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
       })
       .catch(error => {
         console.error('Error:', error);

@@ -12,7 +12,7 @@ const Student = ({ _id, name, email, enrollnumber, removeStudent }) => {
       <td>{ enrollnumber }</td>
       <td>
         <button onClick={ () => removeStudent(_id) } className="Action-Button fa fa-trash"></button>
-        <Link to={{ pathname: '/edit', search: _id }}>
+        <Link to={{ pathname: '/editStudent', search: _id }}>
          <button className="Action-Button fa fa-pencil"></button>
         </Link>
       </td>
