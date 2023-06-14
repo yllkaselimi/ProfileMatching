@@ -15,6 +15,8 @@ app.use('/api/workspace', require('./routes/workspace'));
 app.use('/api/board', require('./routes/board'));
 app.use('/api/card', require('./routes/card')); 
 app.use('/api/note', require('./routes/note')); 
+app.use('/api/note', require('./routes/BoardActivity'));  
+
 
 
 
