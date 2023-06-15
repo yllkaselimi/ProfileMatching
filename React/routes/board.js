@@ -28,14 +28,15 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.get('/:workspaceId', async (req, res) => {
-    try {
-        const board = await board.findById(req.params.workspaceId);
-        res.send({ board });
-    } catch (err) {
-        res.status(404).send({ message: 'board not found!' });
-    }
+router.get('/forWorkspace/:workspaceId', async (req, res) => {
+  try {
+    const boards = await board.find({ workspaceId: req.params.workspaceId });
+    res.send({ boards });
+  } catch (err) {
+    res.status(404).send({ message: 'Boards not found!' });
+  }
 });
+
 
 
 // @route   POST /api/board/

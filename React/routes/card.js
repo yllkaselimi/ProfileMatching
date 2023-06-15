@@ -33,13 +33,24 @@ router.get('/:id', async (req, res) => {
 // @access  Public
 router.post('/', async (req, res) => {
   try {
-    const newcard = await card.create({ name: req.body.name, email: req.body.email, enrollnumber: req.body.enrollnumber });
+    const newcard = await card.create({ boardId: req.body.boardId, cardName: req.body.cardName, cardDescription: req.body.cardDescription, userId: req.body.userId, status: req.body.status, deadline: req.body.deadline });
      res.send({ newcard });
   } catch(err) {
     res.status(400).send({ error: err });
   }
 
 });
+
+router.get('/getByBoard/:boardId', async (req, res) => {
+  try {
+    const boardId = req.params.boardId;
+    const cards = await card.find({ boardId: boardId });
+    res.send({ cards });
+  } catch (err) {
+    res.status(400).send({ error: err });
+  }
+});
+
 
 // @route   PUT /api/card/:id
 // @desc    Update a card

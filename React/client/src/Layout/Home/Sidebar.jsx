@@ -113,7 +113,7 @@ const Sidebar = ({ userId, userRole }) => {
                 <ul>
                     {workspaces.map((workspace) => (
                         <li key={workspace._id}>
-                            <Link to={`/workspace/${workspace._id}`}>{workspace.jobPostName}</Link>
+                            <Link to={`/workspace/${workspace._id}/${userId}`}>{workspace.jobPostName}</Link>
                         </li>
                     ))}
                 </ul>

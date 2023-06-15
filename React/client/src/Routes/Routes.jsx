@@ -7,6 +7,7 @@ import NavBar from "../Layout/NavBar/NavBar";
 import AddStudent from "../components/Students/AddStudent/AddStudent.jsx";
 import EditStudent from "../components/Students/EditStudent/EditStudent.jsx";
 import WorkspacePage from "../components/Workspace/WorkspacePage";
+import AddCard from "../components/Card/AddCard";
 
 const Routes = () => {
     return (
@@ -16,7 +17,8 @@ const Routes = () => {
                 <Route path="/" component={Home} exact />
                 <Route path="/addStudent" component={AddStudent} exact />
                 <Route path="/editStudent" component={EditStudent} exact />
-                <Route path="/workspace/:id" component={WorkspacePage} />
+                <Route path="/workspace/:id/:userId" component={WorkspacePage} />
+                <Route exact path="/addcard/:boardId/:userId" component={AddCard} />
 
             </Switch>
         </Fragment>

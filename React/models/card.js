@@ -1,29 +1,24 @@
 const mongoose = require('mongoose');
 
 const cardSchema = new mongoose.Schema({
-    CardID: {
-        type: String,
-        required: true,
-      },
-    BoardID: {
+    boardId: {
     type: String,
     required: true,
   },
-   CardName: {
+   cardName: {
     type: String,
   },
-   CardDescription: {
+   cardDescription: {
     type: String,
   },
-    UserID: {
-    type: String,
-    required: true,
-  },
-    Status: {
+    userId: {
     type: String,
   },
-    Deadline: {
-    type: String,
+    status: {
+    type: Boolean,
+  },
+    deadline: {
+    type: Date,
   },
 });
 
