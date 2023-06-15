@@ -35,8 +35,8 @@ router.get('/:id', async (req, res) => {
 // Create workspace
 router.post('/create-workspace', async (req, res) => {
   try {
-    const { jobPostId, userId } = req.body;
-    const newWorkspace = await Workspace.create({ jobPostId, userId });
+    const { jobPostId, jobPostName, userId } = req.body;
+    const newWorkspace = await Workspace.create({ jobPostId, jobPostName, userId });
     res.json(newWorkspace);
   } catch (err) {
     res.status(400).json({ error: err });

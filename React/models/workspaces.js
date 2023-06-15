@@ -4,6 +4,9 @@ const workspaceSchema = new mongoose.Schema({
   jobPostId: {
     type: String,
   },
+  jobPostName: {
+    type: String,
+  },
   userId: {
     type: String,
   },

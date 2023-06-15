@@ -7,6 +7,45 @@ const Sidebar = ({ userId, userRole }) => {
   const [workspaces, setWorkspaces] = useState([]);
 
   useEffect(() => {
+    const fetchJobPosts = async () => {
+      try {
+        if (userRole === 'Client') {
+          const response = await axios.get('https://localhost:7044/api/ApplicantsPerJobs/GetJobpostsByClientId', {
+            mode: 'cors',
+            credentials: 'include'
+          });
+          const jobPostsData = response.data;
+
+          const matchingWorkspaces = workspaces.filter((workspace) =>
+            jobPostsData.some((jobPost) => jobPost.jobPostId.toString() === workspace.jobPostId)
+          );
+          setWorkspaces(matchingWorkspaces);
+
+          const unmatchedJobPosts = jobPostsData.filter(
+            (jobPost) => !matchingWorkspaces.some((workspace) => workspace.jobPostId === jobPost.jobPostId.toString())
+          );
+          setJobPosts(unmatchedJobPosts);
+        } else if (userRole === 'Freelancer') {
+          const response = await axios.get('https://localhost:7044/api/ApplicantsPerJobs/getmyhiredjobs', {
+            mode: 'cors',
+            credentials: 'include'
+          });
+          const hiredJobsData = response.data;
+
+          const matchingWorkspaces = workspaces.filter((workspace) =>
+            hiredJobsData.some((jobPost) => jobPost.jobPostId.toString() === workspace.jobPostId)
+          );
+          setWorkspaces(matchingWorkspaces);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchJobPosts();
+  }, [userRole]);
+
+  useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/workspaces');
@@ -20,57 +59,6 @@ const Sidebar = ({ userId, userRole }) => {
     fetchWorkspaces();
   }, []);
 
-  useEffect(() => {
-    if (userRole === 'Client') {
-      fetch('https://localhost:7044/api/ApplicantsPerJobs/GetJobpostsByClientId', {
-        mode: 'cors',
-        credentials: 'include'
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Error fetching job posts by client ID');
-          }
-        })
-        .then((jobPostsData) => {
-          const matchingWorkspaces = workspaces.filter((workspace) =>
-            jobPostsData.some((jobPost) => jobPost.jobPostId.toString() === workspace.jobPostId)
-          );
-          setWorkspaces(matchingWorkspaces);
-
-          const unmatchedJobPosts = jobPostsData.filter(
-            (jobPost) => !matchingWorkspaces.some((workspace) => workspace.jobPostId === jobPost.jobPostId.toString())
-          );
-          setJobPosts(unmatchedJobPosts);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    } else if (userRole === 'Freelancer') {
-      fetch('https://localhost:7044/api/ApplicantsPerJobs/getmyhiredjobs', {
-        mode: 'cors',
-        credentials: 'include'
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Error fetching hired jobs by freelancer');
-          }
-        })
-        .then((hiredJobsData) => {
-          const matchingWorkspaces = workspaces.filter((workspace) =>
-            hiredJobsData.some((jobPost) => jobPost.jobPostId.toString() === workspace.jobPostId)
-          );
-          setWorkspaces(matchingWorkspaces);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
-  }, [userRole, workspaces]);
-
   const handleJobPostChange = (event) => {
     setSelectedJobPost(event.target.value);
   };
@@ -78,17 +66,20 @@ const Sidebar = ({ userId, userRole }) => {
   const addWorkspace = async (e) => {
     e.preventDefault();
     try {
-      const jobPostId = selectedJobPost;
+      const jpId= selectedJobPost;
+      const selectedJobPostData = jobPosts.find((jobPost) => jobPost.jobPostId == jpId);
+      const jobPostName = selectedJobPostData.jobPostName;
 
       await axios.post('http://localhost:5000/api/workspaces/create-workspace', {
-        jobPostId: jobPostId,
+        jobPostId: jpId,
+        jobPostName: jobPostName,
         userId: userId
       });
 
       setSelectedJobPost('');
 
       // Refresh the page to fetch updated workspaces
-      window.location.reload();
+      //window.location.reload();
     } catch (err) {
       console.log('Error:', err);
     }
@@ -96,7 +87,7 @@ const Sidebar = ({ userId, userRole }) => {
 
   return (
     <div className="sidebar bg-light p-3">
-      <p>Welcome {userId} from userCredentials</p>
+      <p>Welcome {userId} </p>
       {jobPosts.length > 0 && (
         <>
           <p>Add Workspace:</p>
@@ -120,7 +111,9 @@ const Sidebar = ({ userId, userRole }) => {
       {workspaces.length > 0 ? (
         <ul>
           {workspaces.map((workspace) => (
-            <li key={workspace.id}>{workspace.jobPostId}</li>
+            <li key={workspace.id}>
+              {workspace.jobPostName}
+            </li>
           ))}
         </ul>
       ) : (
