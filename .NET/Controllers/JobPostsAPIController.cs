@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ASP.NETCoreIdentityCustom.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,52 @@ namespace ProfileMatching.Controllers
 
             return Ok(userCredentials);
         }
+
+        [HttpGet("GetFullName")]
+        public async Task<ActionResult<string>> GetFullName()
+        {
+            var userCredentials = await _context.UserCredentials.FirstOrDefaultAsync();
+
+            if (userCredentials == null)
+            {
+                return NotFound(); // Or any other desired response, such as Ok(null)
+            }
+
+            ApplicationUser applicationUser = null;
+            if (userCredentials.UserRole == "Freelancer")
+            {
+                var freelancerDetails = await _context.FreelancerDetails
+                    .Include(fd => fd.ApplicationUser)
+                    .FirstOrDefaultAsync(fd => fd.UserId == userCredentials.UserId);
+
+                if (freelancerDetails != null)
+                {
+                    applicationUser = freelancerDetails.ApplicationUser;
+                }
+            }
+            else if (userCredentials.UserRole == "Client")
+            {
+                var clientDetails = await _context.ClientDetails
+                    .Include(cd => cd.ApplicationUser)
+                    .FirstOrDefaultAsync(cd => cd.UserId == userCredentials.UserId);
+
+                if (clientDetails != null)
+                {
+                    applicationUser = clientDetails.ApplicationUser;
+                }
+            }
+
+            if (applicationUser == null)
+            {
+                return NotFound(); // Or any other desired response, such as Ok(null)
+            }
+
+            var fullName = $"{applicationUser.FirstName} {applicationUser.LastName}";
+
+            return Ok(fullName);
+        }
+
+
 
         // GET: api/JobPostsAPI/5
         [HttpGet("{id}")]

@@ -26,6 +26,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-3">
                         <h3 class="Card Title"><span>@Model.ApplicationUser.FirstName</span>'s Job Posts</h3>
+                        <a asp-controller="ClientProfile" asp-action="HiredApplicants" class="btn btn-primary">View Hired Applicants</a>
                         <a asp-controller="JobPosts" asp-action="Create" class="btn btn-primary">Create New</a>
                     </div>
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 
 namespace ProfileMatching.Controllers
 {
@@ -73,5 +74,29 @@ namespace ProfileMatching.Controllers
 
             return View(clientInfo);
         }
+
+        public IActionResult HiredApplicants()
+        {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var clientJobPosts = _context.JobPosts.Include(f => f.Category).Where(f => f.UserId == userId).ToList();
+
+            if (clientJobPosts == null)
+            {
+                // Handle the case where no job posts were found for the client
+                // You can return an appropriate view or redirect to another page
+                return View("NoJobPosts");
+            }
+
+            var hiredApplicants = _context.ApplicantsPerJobs
+                .Include(apj => apj.ApplicationUser)
+                .ToList() // Fetch all the ApplicantsPerJobs records from the database
+                .Where(apj => clientJobPosts.Any(jp => jp.JobPostId == apj.JobPostId) && apj.HiredStatus)
+                .ToList();
+
+            return View(hiredApplicants);
+        }
+
+
+
     }
 }

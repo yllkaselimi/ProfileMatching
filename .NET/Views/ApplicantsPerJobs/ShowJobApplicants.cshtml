@@ -32,8 +32,8 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between mb-2">
-                                        @*<h6 class="card-title">@Html.DisplayFor(modelItem => item.JobPost.JobPostName) | @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName)</h6>*@
                                         <h6 class="card-title">@Html.DisplayFor(modelItem => item.JobPost.JobPostName) | @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)</h6>
+                                        <a asp-controller="FreelancerProfile" asp-action="View" asp-route-id="@item.ApplicationUser.Id" class="btn btn-primary btn-sm mb-1 w-50">View Profile</a>
                                     </div>
 
                                     <hr>
@@ -49,7 +49,7 @@
                                         }
                                         else
                                         {
-                                            <button class="btn btn-danger btn-sm mb-1" style="width:100%;">Hire</button>
+                                            <button class="btn btn-primary btn-sm mb-1" style="width:100%;">Hire</button>
                                         }
                                     </form>
                                 </div>

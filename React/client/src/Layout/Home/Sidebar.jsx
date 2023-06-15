@@ -6,6 +6,7 @@ const Sidebar = ({ userId, userRole }) => {
     const [jobPosts, setJobPosts] = useState([]);
     const [selectedJobPost, setSelectedJobPost] = useState('');
     const [workspaces, setWorkspaces] = useState([]);
+    const [fullName, setFullName] = useState('');
 
     useEffect(() => {
         const fetchJobPosts = async () => {
@@ -60,6 +61,24 @@ const Sidebar = ({ userId, userRole }) => {
         fetchWorkspaces();
     }, []);
 
+    useEffect(() => {
+        const fetchFullName = async () => {
+            try {
+                const response = await axios.get('https://localhost:7044/api/jobpostsapi/GetFullName', {
+                    params: {
+                        userId: userId
+                    }
+                });
+                const fullNameData = response.data;
+                setFullName(fullNameData);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchFullName();
+    }, [userId]);
+
     const handleJobPostChange = (event) => {
         setSelectedJobPost(event.target.value);
     };
@@ -80,7 +99,7 @@ const Sidebar = ({ userId, userRole }) => {
             setSelectedJobPost('');
 
             // Refresh the page to fetch updated workspaces
-            //window.location.reload();
+            window.location.reload();
         } catch (err) {
             console.log('Error:', err);
         }
@@ -88,7 +107,7 @@ const Sidebar = ({ userId, userRole }) => {
 
     return (
         <div className="sidebar bg-light p-3">
-            <p>Welcome {userId} </p>
+            <p>Welcome {fullName}</p>
             {jobPosts.length > 0 && (
                 <>
                     <p>Add Workspace:</p>
