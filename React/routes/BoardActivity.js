@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // BoardActivity model
-const BoardActivity = require('../models/boardactivity'); 
+const BoardActivity = require('../models/BoardActivity'); 
 
 // @route   GET /api/BoardActivity/
 // @desc    Get all BoardActivities

@@ -16,4 +16,4 @@ const BoardActivitySchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('BoardActivity', boardSchema);
+module.exports = mongoose.model('BoardActivity', BoardActivitySchema);

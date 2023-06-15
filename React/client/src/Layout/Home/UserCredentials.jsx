@@ -1,65 +1,30 @@
 import React, { useEffect } from 'react';
 
-const UserCredentials = () => {
+const UserCredentials = ({ setUserCredentials }) => { // Accept setUserCredentials prop
   useEffect(() => {
     fetch('https://localhost:7044/api/jobpostsapi/getUserCredentials', { mode: 'cors', credentials: 'include' })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
-          return response.json(); // Parse the response as JSON
+          return response.json();
         } else if (response.status === 404) {
-          window.location.href = 'https://localhost:7044/Identity/Account/Login'; // Redirect to the login page
+          window.location.href = 'https://localhost:7044/Identity/Account/Login';
         } else {
           throw new Error('Error fetching user credentials');
         }
       })
-      .then(data => {
-        console.log('User:', data[0].userId);
-        console.log('Role:', data[0].userRole);
-
-        // Check if the userRole is "Client"
-        if (data[0].userRole === 'Client') {
-          // Fetch data from the new URL for Client
-          fetch('https://localhost:7044/api/ApplicantsPerJobs/GetJobpostsByClientId', { mode: 'cors', credentials: 'include' })
-            .then(response => {
-              if (response.ok) {
-                return response.json(); // Parse the response as JSON
-              } else {
-                throw new Error('Error fetching job posts by client ID');
-              }
-            })
-            .then(jobPostsData => {
-              console.log('Job Posts (Client):', jobPostsData);
-            })
-            .catch(error => {
-              console.error('Error:', error);
-            });
-        }
-
-        // Check if the userRole is "Freelancer"
-        if (data[0].userRole === 'Freelancer') {
-          // Fetch data from the new URL for Freelancer
-          fetch('https://localhost:7044/api/ApplicantsPerJobs/getmyhiredjobs', { mode: 'cors', credentials: 'include' })
-            .then(response => {
-              if (response.ok) {
-                return response.json(); // Parse the response as JSON
-              } else {
-                throw new Error('Error fetching hired jobs');
-              }
-            })
-            .then(hiredJobsData => {
-              console.log('Hired Jobs (Freelancer):', hiredJobsData);
-            })
-            .catch(error => {
-              console.error('Error:', error);
-            });
-        }
+      .then((data) => {
+        const userId = data[0].userId;
+        const userRole = data[0].userRole;
+        console.log('User:', userId);
+        console.log('Role:', userRole);
+        setUserCredentials(userId, userRole); // Call setUserCredentials with userId and userRole
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error:', error);
       });
-  }, []);
+  }, [setUserCredentials]);
 
-  return null; // Render nothing since this component is only responsible for fetching user credentials
+  return null;
 };
 
 export default UserCredentials;

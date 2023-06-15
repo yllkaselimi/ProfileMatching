@@ -2,21 +2,21 @@ const express = require('express');
 const router = express.Router();
 
 // Workspace model
-const Workspace = require('../models/workspace');
+const Workspace = require('../models/workspaces');
 
-// @route   GET /api/workspace/
+// @route   GET /api/workspaces/
 // @desc    Get all workspaces
 // @access  Public
 router.get('/', async (req, res) => {
   try {
-    const workspace = await Workspace.find({});
-    res.send({ workspace })
-  } catch(err) {
+    const workspaces = await Workspace.find({});
+    res.send({ workspaces });
+  } catch (err) {
     res.status(400).send({ error: err });
   }
 });
 
-// @route   GET /api/workspace/:id
+// @route   GET /api/workspaces/:id
 // @desc    Get a specific workspace
 // @access  Public
 router.get('/:id', async (req, res) => {
@@ -28,42 +28,45 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// @route   POST /api/workspace/
+// @route   POST /api/workspaces/
 // @desc    Create a workspace
 // @access  Public
-router.post('/', async (req, res) => {
+// Create workspace
+// Create workspace
+router.post('/create-workspace', async (req, res) => {
   try {
-    const newWorkspace = await Workspace.create({ name: req.body.name, email: req.body.email, enrollnumber: req.body.enrollnumber });
-     res.send({ newWorkspace });
-  } catch(err) {
-    res.status(400).send({ error: err });
+    const { jobPostId, userId } = req.body;
+    const newWorkspace = await Workspace.create({ jobPostId, userId });
+    res.json(newWorkspace);
+  } catch (err) {
+    res.status(400).json({ error: err });
   }
-
 });
 
-// @route   PUT /api/Workspace/:id
+
+
+// @route   PUT /api/workspaces/:id
 // @desc    Update a workspace
 // @access  Public
 router.put('/:id', async (req, res) => {
   try {
     const updatedWorkspace = await Workspace.findByIdAndUpdate(req.params.id, req.body);
-     res.send({ message: 'The workspace was updated' });
-  } catch(err) {
+    res.send({ message: 'The workspace was updated' });
+  } catch (err) {
     res.status(400).send({ error: err });
   }
 });
 
-// @route   DELETE /api/workspace/:id
+// @route   DELETE /api/workspaces/:id
 // @desc    Delete a workspace
 // @access  Public
 router.delete('/:id', async (req, res) => {
   try {
     const removeWorkspace = await Workspace.findByIdAndRemove(req.params.id);
-     res.send({ message: 'The workspace was removed' });
-  } catch(err) {
+    res.send({ message: 'The workspace was removed' });
+  } catch (err) {
     res.status(400).send({ error: err });
   }
 });
-
 
 module.exports = router;
