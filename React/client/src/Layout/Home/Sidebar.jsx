@@ -106,7 +106,7 @@ const Sidebar = ({ userId, userRole }) => {
     };
 
     return (
-        <div className="sidebar bg-light p-3">
+        <div style={{maxWidth:'1300px', width:'100%'}}>
             <p>Welcome {fullName}</p>
             {jobPosts.length > 0 && (
                 <>
@@ -127,15 +127,29 @@ const Sidebar = ({ userId, userRole }) => {
                 </>
             )}
 
-            <p>Workspaces:</p>
+            <h1>Workspaces:</h1>
             {workspaces.length > 0 ? (
-                <ul>
+                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'20px'}}>
                     {workspaces.map((workspace) => (
-                        <li key={workspace._id}>
-                            <Link to={`/workspace/${workspace._id}/${userId}`}>{workspace.jobPostName}</Link>
-                        </li>
+                        <Link to={`/workspace/${workspace._id}/${userId}`}>
+                        <div style={{
+                            textAlign:'center',
+                            backgroundColor: '#ffffff',
+                            border: '1px solid #e9e9e9',
+                            borderRadius: '5px',
+                            padding: '50px 15px',
+                            margin: '5px 0',
+                            boxShadow: 'rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px',
+                        }}>
+                        <h3 key={workspace._id}>
+                            {workspace.jobPostName}
+                        </h3>
+                        
+                        </div>
+                        </Link>
+                        
                     ))}
-                </ul>
+                </div>
             ) : (
                 <p>Nothing to show here</p>
             )}

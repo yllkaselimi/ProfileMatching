@@ -26,28 +26,28 @@ class Home extends Component {
     }
   }
 
-  removeStudent = async (id) => {
-    try {
-      const studentRemoved = await axios.delete(`/api/students/${id}`);
-      const students = await axios('/api/students/');
-      this.setState({ data: students.data });
-    } catch (err) {
-      this.setState({ error: err.message });
-    }
-  };
+  // removeStudent = async (id) => {
+  //   try {
+  //     const studentRemoved = await axios.delete(`/api/students/${id}`);
+  //     const students = await axios('/api/students/');
+  //     this.setState({ data: students.data });
+  //   } catch (err) {
+  //     this.setState({ error: err.message });
+  //   }
+  // };
 
-  searchStudents = async (username) => {
-    let allStudents = [...this.state.data.students];
-    if (this.state.allStudents === null) this.setState({ allStudents });
+  // searchStudents = async (username) => {
+  //   let allStudents = [...this.state.data.students];
+  //   if (this.state.allStudents === null) this.setState({ allStudents });
 
-    let students = this.state.data.students.filter(
-      ({ name }) => name.toLowerCase().includes(username.toLowerCase())
-    );
-    if (students.length > 0) this.setState({ data: { students } });
+  //   let students = this.state.data.students.filter(
+  //     ({ name }) => name.toLo`we`rCase().includes(username.toLowerCase())
+  //   );
+  //   if (students.length > 0) this.setState({ data: { students } });
 
-    if (username.trim() === '')
-      this.setState({ data: { students: this.state.allStudents } });
-  };
+  //   if (username.trim() === '')
+  //     this.setState({ data: { students: this.state.allStudents } });
+  // };
 
   setUserCredentials = (userId, userRole) => {
     this.setState({ userId, userRole });
@@ -78,19 +78,7 @@ class Home extends Component {
       <div className="Table-Wrapper">
         <UserCredentials setUserCredentials={this.setUserCredentials} /> {/* Pass setUserCredentials prop */}
         <Sidebar userId={this.state.userId} userRole={this.state.userRole} /> {/* Pass userId and userRole props */}
-        <h1>Students:</h1>
-        <SearchStudents searchStudents={this.searchStudents} />
-        <table className="Table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Enrollment Number</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{students}</tbody>
-        </table>
+        
       </div>
     );
   }
