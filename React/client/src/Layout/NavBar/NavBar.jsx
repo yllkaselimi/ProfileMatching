@@ -6,11 +6,10 @@ const Home = () => {
   return (
    <nav className="NavBar-Wrapper">
      <div>
-       <h3 className="NavBar-Title">Mern Stack - Crud App</h3>
+     <Link to="/" className="NavBar-Link">JobMatch Connect</Link>
      </div>
      <div className="NavBar-Links">
-      <Link to="/" className="NavBar-Link">Home</Link>
-      <Link to="/addStudent" className="NavBar-Link">Add</Link>
+      <Link to="/" className="NavBar-Link">Workspaces</Link>
       <a href="https://localhost:7044" className="NavBar-Link">Go to JobMatch</a>
      </div>
    </nav>
