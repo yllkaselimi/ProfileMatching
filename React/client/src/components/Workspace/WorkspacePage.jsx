@@ -14,6 +14,57 @@ const WorkspacePage = ({ match }) => {
   const userId = match.params.userId;
 
   useEffect(() => {
+    const draggables = document.querySelectorAll(".task");
+    const droppables = document.querySelectorAll(".swim-lane");
+
+    draggables.forEach((task) => {
+      task.addEventListener("dragstart", () => {
+        task.classList.add("is-dragging");
+      });
+      task.addEventListener("dragend", () => {
+        task.classList.remove("is-dragging");
+      });
+    });
+
+    droppables.forEach((zone) => {
+      zone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    
+        const bottomTask = insertAboveTask(zone, e.clientY);
+        const curTask = document.querySelector(".is-dragging");
+    
+        if (!bottomTask) {
+          zone.insertBefore(curTask, zone.lastChild);
+
+        } else {
+          zone.insertBefore(curTask, bottomTask);
+        }
+      });
+    });
+
+    const insertAboveTask = (zone, mouseY) => {
+      const els = zone.querySelectorAll(".task:not(.is-dragging)");
+    
+      let closestTask = null;
+      let closestOffset = Number.NEGATIVE_INFINITY;
+    
+      els.forEach((task) => {
+        const { top } = task.getBoundingClientRect();
+    
+        const offset = mouseY - top;
+    
+        if (offset < 0 && offset > closestOffset) {
+          closestOffset = offset;
+          closestTask = task;
+        }
+      });
+    
+      return closestTask;
+    };
+
+  }, []);
+
+  useEffect(() => {
     const fetchWorkspace = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/workspaces/${workspaceId}`);
@@ -52,6 +103,8 @@ const WorkspacePage = ({ match }) => {
         console.error('Error:', error);
       }
     };
+
+
 
     fetchMatchingBoards();
   }, [workspaceId]);
@@ -98,15 +151,15 @@ const WorkspacePage = ({ match }) => {
 
   return (
     <div>
-      <h2>Workspace Details</h2>
-      <p>JobPost Name: {workspace.jobPostName}</p>
+      <div style={{ display:'flex',justifyContent:'start',alignItems:'center' }}>
+      <h2 style={{ margin: '20px 20px'}}>{workspace.jobPostName}</h2>
 
-      <h3 style={{ display: 'flex', alignItems: 'center' }}>
+      <h3 style={{ display: 'flex', alignItems: 'center', marginLeft:'20px', }}>
         <button
           onClick={toggleCreateBoard}
-          style={{ cursor: 'pointer', backgroundColor: 'transparent', border: 'none' }}
+          style={{ cursor: 'pointer', backgroundColor: '#6200ea', border: 'none', color:'#FFFFFF', boxSizing:'border-box', padding:'12px 16px', borderRadius:'4px'}}
         >
-          Add Board +
+          + Add Board
         </button>
         {showCreateBoard && (
           <form onSubmit={createBoard} style={{ display: 'flex', alignItems: 'center', marginLeft: '10px' }}>
@@ -115,61 +168,75 @@ const WorkspacePage = ({ match }) => {
               value={boardName}
               onChange={handleBoardNameChange}
               placeholder="Board Name"
-              style={{ padding: '5px', marginRight: '5px', height: '24px' }}
+              style={{ padding: '12px 16px', margin:'0px 5px 0px 0px', borderRadius:'4px' }}
             />
-            <button type="submit" style={{ padding: '5px 10px', height: '24px' }}>
+            <button type="submit" style={{cursor: 'pointer', backgroundColor: '#6200ea', border: 'none', color:'#FFFFFF', boxSizing:'border-box', padding:'12px 16px', borderRadius:'4px'}}>
               Create
             </button>
           </form>
         )}
       </h3>
+      </div>
 
-      <h3>Workspace Boards</h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <h3 style={{marginLeft:'20px',}}>Workspace Boards</h3>
+      <div className='lanes' style={{ display: 'flex', flexWrap: 'wrap', margin: '0px 20px' }}>
         {matchingBoards.map((board) => (
-          <div
+          <div className='swim-lane'
             key={board.id}
             style={{
-              backgroundColor: '#e9e9e9',
+              backgroundColor: '#f1f2f4',
               padding: '20px',
               margin: '10px',
-              width: '200px',
+              width: '250px',
+              borderRadius: '10px',
             }}
           >
-            <p style={{ fontWeight: 'bold' }}>Board Name: {board.boardName}</p>
-            <div>
+            <h3 style={{marginTop:'0px'}}>{board.boardName}</h3>
+            {/* <div className='cardHandler'> */}
               {cardsByBoard[board._id] &&
                 cardsByBoard[board._id].map((card) => (
-                  <div
+                  <div className='task' draggable="true"
                     key={card._id}
                     style={{
                       backgroundColor: '#ffffff',
                       border: '1px solid #e9e9e9',
-                      borderRadius: '4px',
-                      padding: '10px',
+                      borderRadius: '5px',
+                      padding: '5px 15px',
                       margin: '5px 0',
+                      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px',
+                      cursor: 'move',
                     }}
                   >
-                    <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>Card Name:</p>
-                    <p>{card.cardName}</p>
-                    <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>Card Description:</p>
+                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:'0.5em',marginBottom:'1em'}}>
+                    <h3 style={{ fontWeight: 'bold', margin:'0'}}>{card.cardName}</h3> 
+                    
+                    <p style={{backgroundColor:'#6200ea', marginTop:'0',marginBottom:'0',display:'inline-block',color:'#ffffff', width:'25px',height:'25px',display:'flex',justifyContent:'center',alignItems:'center',borderRadius:'100px'}}>{card.status ? '✔' : '✖'}</p>
+                    </div>
                     <p>{card.cardDescription}</p>
-                    <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>Status:</p>
-                    <p>{card.status ? 'Done' : 'Not Done'}</p>
+                    
+                    <hr style={{marginTop:'20px', marginBottom:'5px'}} />
+                    <div style={{display:'flex', justifyContent:'space-between'}}>
                     <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>Deadline:</p>
                     <p>{new Date(card.deadline).toLocaleDateString()}</p>
+                    
+                    </div>
                   </div>
                 ))}
-            </div>
+            {/* </div> */}
             {addingCard === board.id ? (
               <AddCard boardId={board._id} onCardAdded={handleCardAdded} />
             ) : (
-              <Link to={`/addcard/${board._id}/${userId}`}>Add Card</Link>
+              <Link to={`/addcard/${board._id}/${userId}`}
+              style={{cursor: 'pointer', backgroundColor: 'transparent', border: '2px solid #6200ea', color:'#6200ea', boxSizing:'border-box', padding:'12px 16px', borderRadius:'4px'
+                      , display:'inline-block', width:'100%', marginTop:'15px'}}>+ Add Card</Link>
             )}
           </div>
+          
         ))}
       </div>
     </div>
+    
+    
   );
 };
 
