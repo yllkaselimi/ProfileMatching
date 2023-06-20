@@ -53,14 +53,36 @@ const Note = ({ workspaceId, userId }) => {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        value={noteText}
-        onChange={(e) => setNoteText(e.target.value)}
-      />
-      <button onClick={handleSave}>Save</button>
-    </div>
+<div style={{ alignItems: 'center', marginBottom: '20px' }}>
+  <textarea
+    value={noteText}
+    onChange={(e) => setNoteText(e.target.value)}
+    style={{
+      padding: '8px',
+      marginRight: '10px',
+      borderRadius: '4px',
+      border: '1px solid #ccc',
+      width: '300px',
+      height: '150px',
+      resize: 'vertical'
+    }}
+  ></textarea>
+  <button
+    onClick={handleSave}
+    style={{
+      cursor: 'pointer',
+      backgroundColor: '#6200ea',
+      border: 'none',
+      color: '#FFFFFF',
+      padding: '8px 16px',
+      borderRadius: '4px'
+    }}
+  >
+    Save
+  </button>
+</div>
+
+
   );
 };
 

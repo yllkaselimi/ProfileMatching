@@ -170,37 +170,48 @@ const WorkspacePage = ({ match }) => {
 
   return (
     <div>
-      <div style={{ display:'flex',justifyContent:'start',alignItems:'center' }}>
+      <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center' }}>
+        <h2 style={{ margin: '20px 20px'}}>{workspace.jobPostName} Workspace </h2>
 
-      <h2 style={{ margin: '20px 20px'}}>{workspace.jobPostName}</h2>
+        <div style={{ marginRight: '20px', position: 'relative' }}>
+          <p
+            style={{
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={handleHover}
+            onMouseLeave={handleLeave}
+          >
+            Workspace Members
+          </p>
+          {showContent && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                backgroundColor: '#fff',
+                boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+                padding: '10px',
+                fontWeight: 'normal',
+                zIndex: 1
+              }}
+            >
+              <p>Job Client: {clientName}</p>
+              <p>Members: {memberNames.join(', ')}</p>
+            </div>
+          )}
+      </div>
 
-      <div>
-      <p
-        style={{
-          fontWeight: 'bold',
-          cursor: 'pointer'
-        }}
-        onMouseEnter={handleHover}
-        onMouseLeave={handleLeave}
-      >
-        Workspace Members
-      </p>
-      {showContent && (
-        <div
-          style={{
-            fontWeight: 'normal'
-          }}
-        >
-          <p>Job Client: {clientName}</p>
-          <p>Members: {memberNames.join(', ')}</p>
-        </div>
-      )}
-    </div>
 
+      </div>
+
+     <div style={{ display: 'flex'}}>
+      <h3 style={{marginLeft:'20px',}}>Workspace Boards</h3>
       <h3 style={{ display: 'flex', alignItems: 'center', marginLeft:'20px', }}>
         <button
           onClick={toggleCreateBoard}
-          style={{ cursor: 'pointer', backgroundColor: '#6200ea', border: 'none', color:'#FFFFFF', boxSizing:'border-box', padding:'12px 16px', borderRadius:'4px'}}
+          style={{ cursor: 'pointer', backgroundColor: '#6200ea', border: 'none', color:'#FFFFFF', boxSizing:'border-box', padding:'12px 16px', borderRadius:'4px', marginTop: '-5px' }}
         >
           + Add Board
         </button>
@@ -221,8 +232,9 @@ const WorkspacePage = ({ match }) => {
       </h3>
       </div>
 
-      <h3 style={{marginLeft:'20px',}}>Workspace Boards</h3>
-      <div className='lanes' style={{ display: 'flex', flexWrap: 'wrap', margin: '0px 20px' }}>
+      <div className='bodyContainer' style={{ display: 'flex'}}>
+        <div className='rightContainer'>
+        <div className='lanes' style={{ display: 'flex', flexWrap: 'wrap', margin: '0px 20px' }}>
         {matchingBoards.map((board) => (
           <div className='swim-lane'
             key={board.id}
@@ -277,9 +289,15 @@ const WorkspacePage = ({ match }) => {
           
         ))}
       </div>
+        </div>
 
-      <h3>Note</h3>
-    <Note workspaceId={workspaceId} userId={userId} />
+        <div className='leftContainer'>
+        <h3>Your Personal Notes: </h3>
+        <Note workspaceId={workspaceId} userId={userId} />
+        </div>
+
+      </div>
+      
     
     </div>
     
@@ -288,5 +306,3 @@ const WorkspacePage = ({ match }) => {
 };
 
 export default WorkspacePage;
-
-
