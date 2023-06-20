@@ -1,17 +1,13 @@
 const mongoose = require('mongoose');
 
 const noteSchema = new mongoose.Schema({
-    NoteID: {
-    type: String,
-    required: true,
-  },
-  BoardID: {
+  workspaceId: {
     type: String,
   },
-  NoteText: {
+  noteText: {
     type: String,
   },
-  UserID: {
+  userId: {
     type: String,
   },
 });

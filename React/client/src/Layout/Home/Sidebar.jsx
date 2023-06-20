@@ -107,7 +107,7 @@ const Sidebar = ({ userId, userRole }) => {
 
     return (
         <div style={{maxWidth:'1300px', width:'100%'}}>
-            <p>Welcome {fullName}</p>
+            <p>Welcome {fullName}!</p>
             {jobPosts.length > 0 && (
                 <>
                     <p>Add Workspace:</p>
@@ -127,7 +127,7 @@ const Sidebar = ({ userId, userRole }) => {
                 </>
             )}
 
-            <h1>Workspaces:</h1>
+            <h1>Your Workspaces:</h1>
             {workspaces.length > 0 ? (
                 <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'20px'}}>
                     {workspaces.map((workspace) => (

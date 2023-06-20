@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AddCard from '../Card/AddCard';
 import { Link } from 'react-router-dom';
+import Note from './Note';
 
 const WorkspacePage = ({ match }) => {
   const [workspace, setWorkspace] = useState(null);
@@ -10,8 +11,19 @@ const WorkspacePage = ({ match }) => {
   const [matchingBoards, setMatchingBoards] = useState([]);
   const [addingCard, setAddingCard] = useState(null);
   const [cardsByBoard, setCardsByBoard] = useState({});
+  const [clientName, setClientName] = useState('');
+  const [memberNames, setMemberNames] = useState([]);
   const workspaceId = match.params.id;
   const userId = match.params.userId;
+  const [showContent, setShowContent] = useState(false);
+
+  const handleHover = () => {
+    setShowContent(true);
+  };
+
+  const handleLeave = () => {
+    setShowContent(false);
+  };
 
   useEffect(() => {
     const draggables = document.querySelectorAll(".task");
@@ -71,6 +83,15 @@ const WorkspacePage = ({ match }) => {
         const workspaceData = response.data;
         console.log('Workspace Data:', workspaceData);
         setWorkspace(workspaceData.workspace);
+        const userId = workspaceData.workspace.userId;
+        const jobPostId = workspaceData.workspace.jobPostId;
+        const workspaceMembers = await axios.get(`https://localhost:7044/api/ApplicantsPerJobs/GetHiredApplicantsForJobPost/${jobPostId}`);
+        const memberNames = workspaceMembers.data.map((member) => `${member.firstName} ${member.lastName}`);
+        console.log(memberNames);
+        setMemberNames(memberNames);
+        const clientResponse = await axios.get(`https://localhost:7044/api/jobpostsapi/getjobclientname/${userId}`);
+        const clientData = clientResponse.data;
+        setClientName(clientData);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -103,8 +124,6 @@ const WorkspacePage = ({ match }) => {
         console.error('Error:', error);
       }
     };
-
-
 
     fetchMatchingBoards();
   }, [workspaceId]);
@@ -152,7 +171,31 @@ const WorkspacePage = ({ match }) => {
   return (
     <div>
       <div style={{ display:'flex',justifyContent:'start',alignItems:'center' }}>
+
       <h2 style={{ margin: '20px 20px'}}>{workspace.jobPostName}</h2>
+
+      <div>
+      <p
+        style={{
+          fontWeight: 'bold',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={handleHover}
+        onMouseLeave={handleLeave}
+      >
+        Workspace Members
+      </p>
+      {showContent && (
+        <div
+          style={{
+            fontWeight: 'normal'
+          }}
+        >
+          <p>Job Client: {clientName}</p>
+          <p>Members: {memberNames.join(', ')}</p>
+        </div>
+      )}
+    </div>
 
       <h3 style={{ display: 'flex', alignItems: 'center', marginLeft:'20px', }}>
         <button
@@ -234,6 +277,10 @@ const WorkspacePage = ({ match }) => {
           
         ))}
       </div>
+
+      <h3>Note</h3>
+    <Note workspaceId={workspaceId} userId={userId} />
+    
     </div>
     
     
@@ -241,3 +288,5 @@ const WorkspacePage = ({ match }) => {
 };
 
 export default WorkspacePage;
+
+

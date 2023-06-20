@@ -170,6 +170,7 @@ namespace ProfileMatching.Controllers
               .Include(m => m.JobPost)
               .Include(m => m.JobPost.Category)
               .Include(m => m.ApplicationUser)
+              .OrderByDescending(m => m.HiredStatus)
               .ToListAsync();
 
             return View(await jobs);

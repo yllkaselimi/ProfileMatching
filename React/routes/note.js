@@ -33,13 +33,27 @@ router.get('/:id', async (req, res) => {
 // @access  Public
 router.post('/', async (req, res) => {
   try {
-    const newnote = await note.create({ name: req.body.name, email: req.body.email, enrollnumber: req.body.enrollnumber });
+    const newnote = await note.create({ workspaceId: req.body.workspaceId, noteText: req.body.noteText, userId: req.body.userId });
      res.send({ newnote });
   } catch(err) {
     res.status(400).send({ error: err });
   }
 
 });
+
+//look for exisiting note
+router.get('/forWorkspaceAndUser/:workspaceId/:userId', async (req, res) => {
+  try {
+    const notes = await note.find({
+      workspaceId: req.params.workspaceId,
+      userId: req.params.userId,
+    });
+    res.send({ notes });
+  } catch (err) {
+    res.status(404).send({ message: 'Notes not found!' });
+  }
+});
+
 
 // @route   PUT /api/note/:id
 // @desc    Update a note

@@ -99,6 +99,28 @@ namespace ProfileMatching.Controllers
         }
 
 
+        [HttpGet("GetJobClientName/{userId}")]
+        public async Task<ActionResult<string>> GetJobClientName (string userId)
+        {
+            var clientDetails = await _context.ClientDetails
+                            .Include(cd => cd.ApplicationUser)
+                            .FirstOrDefaultAsync(cd => cd.UserId == userId);
+
+            var applicationUser = clientDetails.ApplicationUser;
+
+            if (clientDetails == null)
+            {
+                return NotFound(); // Or any other desired response, such as Ok(null)
+            }
+
+            var fullName = $"{applicationUser.FirstName} {applicationUser.LastName}";
+
+            return Ok(fullName);
+        }
+
+
+
+
 
         // GET: api/JobPostsAPI/5
         [HttpGet("{id}")]

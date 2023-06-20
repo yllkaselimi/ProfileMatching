@@ -48,10 +48,20 @@
 
                                          @if (User.IsInRole("Freelancer")) {
                                              @if (!(customVariable.Equals("0"))){
+                                                 <a href="@Url.Action("Index", "JobSuggestions")" style="text-decoration: none; color: white;">
                                                    <span> @customVariable New Job Posts!</span>
+                                                  </a>
                                              }
                                              @if (!(hiredJobs.Equals("0"))){
-                                                   <span> @hiredJobs  jobs have hired you! </span>
+                                                <a href="@Url.Action("MyJobApplications", "ApplicantsPerJobs")" style="text-decoration: none; color: white;">
+                                                    @if(hiredJobs.Equals("1")){
+                                                        <span>@hiredJobs job has hired you!</span>
+                                                    }
+                                                    else{
+                                                         <span>@hiredJobs jobs have hired you!</span>
+                                                    }
+                                                </a>
+
                                              }
                                          }
 

@@ -52,48 +52,76 @@ const AddCard = ({ match }) => {
     }
   };
 
+
   return (
-    <div>
-      <h2>Add Card</h2>
-      <form onSubmit={createCard}>
-        <div>
-          <label htmlFor="cardName">Card Name:</label>
-          <input
-            type="text"
-            id="cardName"
-            value={cardName}
-            onChange={handleCardNameChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="cardDescription">Card Description:</label>
-          <textarea
-            id="cardDescription"
-            value={cardDescription}
-            onChange={handleCardDescriptionChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="status">Status:</label>
-          <input
-            type="checkbox"
-            id="status"
-            checked={status}
-            onChange={handleStatusChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="deadline">Deadline:</label>
-          <input
-            type="date"
-            id="deadline"
-            value={deadline}
-            onChange={handleDeadlineChange}
-          />
-        </div>
-        <button type="submit">Create Card</button>
-      </form>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{ width: '400px', margin: 'auto', padding: '20px', borderRadius: '8px', boxShadow: '0 0px 10px rgba(0, 0, 0, 0.2)' }}>
+        <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>Add Card</h2>
+        <form onSubmit={createCard}>
+          <div style={{ marginBottom: '10px' }}>
+            <label htmlFor="cardName" style={{ display: 'block', marginBottom: '5px' }}>
+              Card Name:
+            </label>
+            <input
+              type="text"
+              id="cardName"
+              value={cardName}
+              onChange={handleCardNameChange}
+              required
+              style={{ padding: '5px', width: '100%', margin: 0 }}
+            />
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <label htmlFor="cardDescription" style={{ display: 'block', marginBottom: '5px' }}>
+              Card Description:
+            </label>
+            <textarea
+              id="cardDescription"
+              value={cardDescription}
+              onChange={handleCardDescriptionChange}
+              style={{ padding: '5px', minHeight: '100px', width: '100%' }}
+            />
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <label htmlFor="status" style={{ marginRight: '10px' }}>
+              Status:
+            </label>
+            <input
+              style={{ display: 'inline'}}
+              type="checkbox"
+              id="status"
+              checked={status}
+              onChange={handleStatusChange}
+            />
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <label htmlFor="deadline" style={{ marginRight: '10px' }}>
+              Deadline:
+            </label>
+            <input
+             style={{ display: 'inline-block'}}
+              type="date"
+              id="deadline"
+              value={deadline}
+              onChange={handleDeadlineChange}
+            />
+          </div>
+          <button
+            type="submit"
+            style={{
+              padding: '10px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              width: '102%'
+            }}
+          >
+            Create Card
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
